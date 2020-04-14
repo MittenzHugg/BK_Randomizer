@@ -15,12 +15,12 @@ end
 
 local make = loadfile("build/lua/make.lua")
 
-local rom, rom_info, kb_version = make(in_rom)
+local rom, rom_info, rando_version = make(in_rom)
 
 if(opt_out_rom ~= nil) then
     print("saving " .. opt_out_rom)
     rom:save(opt_out_rom)
 else
-    print("Saving build/" .. kb_version .. ".z64")
-    rom:save("build/" .. kb_version .. ".z64")
+    print("Saving build/" .. rando_version .. ".z64")
+    rom:save("build/" .. rando_version .. ".z64")
 end

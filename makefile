@@ -1,6 +1,6 @@
 target          = mips64
 PACKAGE        ?= $(NAME)
-URL            ?= github.com/krimtonz/kb
+URL            ?= github.com/MittenzHugg/Randjo-Kazooie
 CC              = $(target)-gcc
 LD              = $(target)-g++
 AS              = $(target)-gcc -x assembler-with-cpp
@@ -13,7 +13,7 @@ SRCDIR          = src
 OBJDIR          = obj
 BINDIR          = bin
 LIBDIR          = lib
-KB_VERSIONS     = NBKJ NBKE NBKE11 NBKP
+RANDO_VERSIONS     = NBKJ NBKE NBKE11 NBKP
 RESDESC         = res.json
 
 ADDRESS         = 0x80400060
@@ -23,15 +23,15 @@ ALL_CFLAGS      = -c -Ilibundermine/include -MMD -MP -std=gnu11 -Wall -ffunction
 ALL_LDFLAGS     = -T gl-n64.ld -L$(LIBDIR) -Llibundermine/lib/libundermine-f3dex -nostartfiles -specs=nosys.specs -Wl,--gc-sections -O1 $(LDFLAGS)
 ALL_LIBS        = $(LIBS)
 
-KB	            = $(foreach v,$(KB_VERSIONS),kb-$(v))
-LDR             = $(foreach v,$(KB_VERSIONS),ldr-kb-$(v))
+RANDO	            = $(foreach v,$(RANDO_VERSIONS),rando-$(v))
+LDR             = $(foreach v,$(RANDO_VERSIONS),ldr-rando-$(v))
 
-KB-NBKJ         = $(OBJ-kb-NBKJ) $(ELF-kb-NBKJ)
-KB-NBKE			= $(OBJ-kb-NBKE) $(ELF-kb-NBKE)
-KB-NBKE11		= $(OBJ-kb-NBKE11) $(ELF-kb-NBKE11)
-KB-NBKP			= $(OBJ-kb-NBKP) $(ELF-kb-NBKP)
+RANDO-NBKJ         = $(OBJ-rando-NBKJ) $(ELF-rando-NBKJ)
+RANDO-NBKE			= $(OBJ-rando-NBKE) $(ELF-rando-NBKE)
+RANDO-NBKE11		= $(OBJ-rando-NBKE11) $(ELF-rando-NBKE11)
+RANDO-NBKP			= $(OBJ-rando-NBKP) $(ELF-rando-NBKP)
 
-all	            : $(KB)
+all	            : $(RANDO)
 clean           :
 	rm -rf $(OBJDIR) $(BINDIR)
 
@@ -92,10 +92,10 @@ $$(OUTDIR-$(1)) :
 	mkdir -p $$@
 endef
 
-$(foreach v,$(KB_VERSIONS),$(eval $(call bin_template,kb-$(v),$(v),kb,$(ADDRESS),src/kb,res)))
-$(foreach v,$(KB_VERSIONS),$(eval $(call bin_template,ldr-kb-$(v),$(v),ldr,$(ADDRESS_LDR),src/ldr,res/ldr)))
+$(foreach v,$(RANDO_VERSIONS),$(eval $(call bin_template,rando-$(v),$(v),rando,$(ADDRESS),src/rando,res)))
+$(foreach v,$(RANDO_VERSIONS),$(eval $(call bin_template,ldr-rando-$(v),$(v),ldr,$(ADDRESS_LDR),src/ldr,res/ldr)))
 
-$(KB-NBKJ)      : LIBS := -lnbkj -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive
-$(KB-NBKE)      : LIBS := -lnbke -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive
-$(KB-NBKE11)    : LIBS := -lnbke11 -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive
-$(KB-NBKP)      : LIBS := -lnbkp -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive
+$(RANDO-NBKJ)      : LIBS := -lnbkj -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive
+$(RANDO-NBKE)      : LIBS := -lnbke -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive
+$(RANDO-NBKE11)    : LIBS := -lnbke11 -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive
+$(RANDO-NBKP)      : LIBS := -lnbkp -Wl,--whole-archive -lundermine-f3dex -Wl,--no-whole-archive

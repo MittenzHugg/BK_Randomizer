@@ -6,7 +6,7 @@ game_update_hook        = 0x8023de14;
 game_update             = 0x802e4424;
 bk_gfx_finish           = 0x80253DE0;
 gfx_finish_hook         = 0x802E3B7C;
-kb_vi_counter           = 0x80274578; /* need nbke */
+rando_vi_counter           = 0x80274578; /* need nbke */
 bk_controller_raw       = 0x802812B8;
 
 
@@ -36,5 +36,7 @@ bk_mumbo_token_flag_set = 0x803215d0;
 
 bk_empty_honeycomb_flag_get = 0x803212e4;
 bk_empty_honeycomb_flag_set = 0x80321364;
+
+bk_map = 0x8037E8f5;
 
 bk_high_note_scores = 0x80385ff0;

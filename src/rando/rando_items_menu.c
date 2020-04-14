@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <libundermine.h>
-#include "kb.h"
+#include "rando.h"
 #include "bk.h"
 #include "items.h"
 

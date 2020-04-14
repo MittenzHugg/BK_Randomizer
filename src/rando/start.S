@@ -7,7 +7,7 @@
 .ent      _start
 .type     _start, @function
 _start:
-    la      $t0, kb_load_stage1
+    la      $t0, rando_load_stage1
     la      $t1, 0x00FFFFFF
     and     $t0, $t0, $t1
     srl     $t0, $t0, 2
@@ -20,10 +20,10 @@ _start:
     j       0x80400000
 .end _start
 
-.global _kb_entry
-.ent _kb_entry
-.type _kb_entry, @function
-_kb_entry:
+.global _rando_entry
+.ent _rando_entry
+.type _rando_entry, @function
+_rando_entry:
     addiu   $sp, $sp, -0x0008
     la      $t0, _entry_data
     sw      $sp, 0x0000($t0)
@@ -35,13 +35,13 @@ _kb_entry:
     lw      $ra, 0x0004($t0)
     addiu   $sp, $sp, 0x0008
     jr      $ra
-.end _kb_entry
-.size _kb_entry, . - _kb_entry
+.end _rando_entry
+.size _rando_entry, . - _rando_entry
 
-.global _kb_exit
-.ent _kb_exit
-.type _kb_exit, @function
-_kb_exit:
+.global _rando_exit
+.ent _rando_exit
+.type _rando_exit, @function
+_rando_exit:
     addiu   $sp, $sp, -0x0008
     sw      $ra, 0x0004($sp)
     la      $t0, _entry_data
@@ -57,8 +57,8 @@ _kb_exit:
     lw      $ra, 0x0004($sp)
     addiu   $sp, $sp, 0x0008
     jr      $ra
-.end _kb_exit
-.size _kb_exit, . - _kb_exit
+.end _rando_exit
+.size _rando_exit, . - _rando_exit
 
 .section .stack, "aw", @nobits
 .align 3

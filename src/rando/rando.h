@@ -1,5 +1,5 @@
-#ifndef _KB_H
-#define _KB_H
+#ifndef _RANDO_H
+#define _RANDO_H
 
 #include <list/list.h>
 #include <libundermine.h>
@@ -10,9 +10,9 @@ typedef struct {
     int         menu_active;
     char       *tooltip;
     struct list watches;
-} kb_ctxt_t;
+} rando_ctxt_t;
 
-extern kb_ctxt_t kb;
+extern rando_ctxt_t rando;
 
 menu_t *create_transformations_menu(void);
 menu_t *create_warps_menu(void);

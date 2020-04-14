@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <libundermine.h>
-#include "kb.h"
+#include "rando.h"
 
 struct watch_row {
     union{
@@ -69,7 +69,7 @@ static struct watch_row *delete_row(struct watch_row *row){
         if(watch->label){
             free(watch->label);
         }
-        list_erase(&kb.watches, row->watch);
+        list_erase(&rando.watches, row->watch);
     }
     list_erase(&watch_rows, row);
     return prev_row;
@@ -110,7 +110,7 @@ void clear_watches(void){
 }
 
 void init_watch_rows(void){
-    for(watch_t *watch = kb.watches.first;watch;watch = list_next(watch)){
+    for(watch_t *watch = rando.watches.first;watch;watch = list_next(watch)){
         if(!watch->label){
             watch->label = malloc(21);
             memset(watch->label, 0, 21);
@@ -194,11 +194,11 @@ static void watch_add(watch_t *watch, _Bool setpos){
 }
 
 static int watches_button_add_onactivate(event_handler_t *handler, menu_event_t event, void **event_data){
-    if(kb.watches.size >= WATCHES_MAX){
+    if(rando.watches.size >= WATCHES_MAX){
         //kz_log("watches limit reached");(uint32_t)
         return 1;
     }
-    watch_t *watch = list_push_back(&kb.watches, NULL);
+    watch_t *watch = list_push_back(&rando.watches, NULL);
     static enum watch_type type = WATCH_TYPE_U8;
     watch->address = (void*)prev_addr;
     watch->type = type;

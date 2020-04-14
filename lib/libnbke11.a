@@ -6,7 +6,7 @@ game_update_hook        = 0x8023DA74;
 game_update             = 0x802E3464;
 bk_gfx_finish           = 0x80252B30;
 gfx_finish_hook         = 0x802E2BBC;
-kb_vi_counter           = 0x80274578; /* need nbke-1.1 */
+rando_vi_counter           = 0x80274578; /* need nbke-1.1 */
 bk_controller_raw       = 0x80284754;
 
 bk_take_me_there        = 0x802e30b8;

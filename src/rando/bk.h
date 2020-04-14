@@ -112,7 +112,9 @@ bk_extern   uint32_t        load_code_stage1_hook;
 bk_extern   uint32_t        gfx_finish_hook;
 bk_extern   int32_t         bk_vi_counter;
 bk_extern   bk_controller_t bk_controller_raw;
+bk_extern   uint8_t         bk_map;
 bk_extern   uint8_t         bk_high_note_scores;
+
 
 bk_extern   int         game_update                     (void);
 bk_extern   void        load_code_stage2                (void);

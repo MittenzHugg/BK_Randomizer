@@ -10,9 +10,9 @@
 #include <stdint.h>
 
 enum {
-    KB_CMD_TOGGLE_MENU,
-    KB_CMD_RETURN,
-    KB_CMD_MAX
+    RANDO_CMD_TOGGLE_MENU,
+    RANDO_CMD_RETURN,
+    RANDO_CMD_MAX
 };
 
 enum command_type {
@@ -28,6 +28,6 @@ struct command {
 
 void    command_return          (void);
 
-extern struct command kb_commands[KB_CMD_MAX];
-extern uint16_t kb_binds[KB_CMD_MAX];
+extern struct command rando_commands[RANDO_CMD_MAX];
+extern uint16_t rando_binds[RANDO_CMD_MAX];
 #endif

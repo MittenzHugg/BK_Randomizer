@@ -8,8 +8,8 @@ typedef struct {
 } start_ctxt_t;
 
 void _start();
-void _kb_entry();
-void *_kb_exit();
+void _rando_entry();
+void *_rando_exit();
 
 __attribute__ ((section(".data")))
 extern start_ctxt_t _entry_data;

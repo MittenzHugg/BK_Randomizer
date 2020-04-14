@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <libundermine.h>
-#include "kb.h"
+#include "rando.h"
 #include "bk.h"
 
 static int set_transformation_proc(event_handler_t *handler, menu_event_t event, void **data){

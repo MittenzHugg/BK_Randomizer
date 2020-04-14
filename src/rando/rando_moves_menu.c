@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <libundermine.h>
-#include "kb.h"
+#include "rando.h"
 #include "bk.h"
 
 struct moves_data {
