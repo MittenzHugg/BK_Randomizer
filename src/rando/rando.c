@@ -19,19 +19,17 @@ void rando_main(void){
     void *event_data = NULL;
     rando.menu_active = (bk_map == 0x91); //activate menu when on select screen 0x91
     if(rando.menu_active){
-
         menu_t *rando_menu = &rando.main_menu;
         if(rando.current_file != bk_save_file_index_get()){
-            // TODO save seed to ED file
-            // TODO load seed from ED file
+            // TODO save old seed to ED file
             if(bk_files_has_data(bk_save_file_index_get())){                
                 rando_menu->selected_item = NULL;
             } else {
                 rando_menu->selected_item = rando.seed_num;
             }
             rando.current_file = bk_save_file_index_get();
+            menu_number_set(rando.seed_num,rando.seed[rando.current_file]);
         }
-        
         if(!bk_files_has_data(rando.current_file)){
             uint16_t pressed = input_pressed();
             if(pressed & BUTTON_D_DOWN){
@@ -61,8 +59,34 @@ void rando_main(void){
     }
 }
 
-static int main_menu_on_activate(event_handler_t *handler, menu_event_t event, void **event_data){
-    //rando.menu_active = 0;
+static int rando_seed_update(event_handler_t *handler, menu_event_t event, void **event_data){
+    uint32_t value = (uint32_t)*event_data;
+    menu_number_set(handler->subscriber, value);
+    rando.seed[rando.current_file] = value;
+    return 1;
+}
+
+static int rando_mode_set(event_handler_t *handler, menu_event_t event, void **event_data){
+    rando.mode[rando.current_file] = (rando_mode_t) handler->callback_data;
+    menu_item_t *button = handler->subscriber;
+    if( rando.mode[rando.current_file] == (rando_mode_t) handler->callback_data){
+        button->color = COLOR_GREEN;
+    }
+    else {
+        button->color = DEFAULT_COLOR;
+    }
+    return 1;
+}
+
+static int rando_mode_update(event_handler_t *handler, menu_event_t event, void **event_data){
+    menu_item_t *button = handler->subscriber;
+    rando_mode_t button_mode = (rando_mode_t) handler->callback_data;
+    if( rando.mode[rando.current_file] == (rando_mode_t) handler->callback_data){
+        button->color = COLOR_GREEN;
+    }
+    else {
+        button->color = DEFAULT_COLOR;
+    }
     return 1;
 }
 
@@ -77,25 +101,26 @@ void init(void){
     rando_resource_init();
     gfx_init(0x32800, resource_get(resource_handles[R_RANDO_FONT]), NULL);
 
-    //list_init(&rando.watches, sizeof(watch_t));
-
     menu_t *main_menu = &rando.main_menu;
     menu_t *pause_menu = &rando.pause_menu;
     menu_ctx_init(main_menu, NULL);
     menu_init(main_menu, 20, 30);
 
-
-    //main_menu->selected_item = menu_button_add(main_menu, 0, 0, "return", main_menu_on_activate, NULL);
-    
     menu_label_add(main_menu, 0, 3, "Seed:");
     rando.seed_num = menu_number_input_add(main_menu, 8, 3, 16, 8);
-    main_menu->selected_item = rando.seed_num;
+    menu_item_register_event(rando.seed_num,  MENU_EVENT_NUMBER, rando_seed_update, NULL);
     menu_number_set(rando.seed_num, 0xDEADBEEF);
 
     menu_label_add(main_menu, 0, 4, "Length:");
-    menu_button_add(main_menu, 8, 4, "Short",main_menu_on_activate, NULL); // TODO set callback 
-    menu_button_add(main_menu, 14, 4, "Normal",main_menu_on_activate, NULL); // TODO set callback 
-    menu_button_add(main_menu, 21, 4, "Long",main_menu_on_activate, NULL); // TODO set callback 
+    menu_item_t* short_button = menu_button_add(main_menu, 8, 4, "Short",rando_mode_set, RANDO_MODE_SHORT);
+    menu_item_register_event(short_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_SHORT);
+
+    menu_item_t* normal_button = menu_button_add(main_menu, 14, 4, "Normal",rando_mode_set, RANDO_MODE_NORMAL);
+    normal_button->color = COLOR_GREEN;
+    menu_item_register_event(normal_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_NORMAL);
+
+    menu_item_t* long_button = menu_button_add(main_menu, 21, 4, "Long",rando_mode_set, RANDO_MODE_LONG); 
+    menu_item_register_event(long_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_LONG);
 
     menu_ctx_init(pause_menu, NULL);
     menu_init(pause_menu, 20, 30);
@@ -107,8 +132,12 @@ void init(void){
     rando.menu_active = 0;
     rando.current_file = 0;
     rando.ready = 1;
-    rando_binds[RANDO_CMD_TOGGLE_MENU] = make_bind(2, BUTTON_R, BUTTON_L);
-    rando_binds[RANDO_CMD_RETURN] = make_bind(2, BUTTON_R, BUTTON_D_LEFT);
+    for(int i=0; i<4; i++){
+        // TODO load info from ED file
+        rando.seed[i]=i;
+        rando.mode[i]=RANDO_MODE_NORMAL;
+        menu_number_set(rando.seed_num, rando.seed[rando.current_file]);
+    }
 }
 
 int _main(void){
