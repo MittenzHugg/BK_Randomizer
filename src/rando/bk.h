@@ -29,6 +29,16 @@ typedef struct{
     int8_t y;
 } bk_controller_t;
 
+typedef enum game_mode{
+    BK_GAME_MODE_NORMAL = 0x03,
+    BK_GAME_MODE_PAUSED = 0x04,
+    BK_GAME_MODE_RECORDED_FILE = 0x06,
+    BK_GAME_MODE_DEMO = 0x07,
+    BK_GAME_MODE_BOTTLES_BONUS = 0x08,
+    BK_GAME_MODE_BANJO_AND_KAZOOIE = 0x09,
+    BK_GAME_MODE_SNS_PICTURE = 0x0a,
+} bk_game_mode_t;
+
 typedef enum moves{
     bk_moves_beakBarge = 0,
     bk_moves_beakBomb = 1,
@@ -131,6 +141,12 @@ bk_extern   void        bk_moves_unlocked_set (uint32_t move_index, uint32_t boo
 bk_extern   bool        bk_moves_unlocked_get (uint32_t move_index);
 bk_extern   void        bk_moves_has_used_set (uint32_t move_index); //code clear method
 bk_extern   bool        bk_moves_has_used_get (uint32_t move_index);
+
+bk_extern   uint32_t    bk_save_file_index_get(void);
+
+bk_extern   bool        bk_files_has_data(uint32_t file_index);
+
+bk_extern   bk_game_mode_t  bk_game_mode_get (void);
 
 bk_extern   uint32_t    bk_item_get_count   (uint32_t item_index);
 bk_extern   uint32_t    bk_item_array;

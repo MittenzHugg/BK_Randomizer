@@ -9,7 +9,7 @@
 
 __attribute__((section(".data")))
 rando_ctxt_t rando = {
-    .ready = 0
+    .ready = 0,
 };
 
 void rando_main(void){
@@ -19,13 +19,20 @@ void rando_main(void){
     void *event_data = NULL;
     rando.menu_active = (bk_map == 0x91); //activate menu when on select screen 0x91
     if(rando.menu_active){
+
         menu_t *rando_menu = &rando.main_menu;
-        //enable inputs values on new_file
-        //disable inputs on existing file
-        if(input_bind_pressed_raw(RANDO_CMD_TOGGLE_MENU)){
-            rando.menu_active = 1;
-            free_buttons(BUTTON_L | BUTTON_D_DOWN | BUTTON_D_UP | BUTTON_D_LEFT | BUTTON_D_RIGHT);
-        }else{
+        if(rando.current_file != bk_save_file_index_get()){
+            // TODO save seed to ED file
+            // TODO load seed from ED file
+            if(bk_files_has_data(bk_save_file_index_get())){                
+                rando_menu->selected_item = NULL;
+            } else {
+                rando_menu->selected_item = rando.seed_num;
+            }
+            rando.current_file = bk_save_file_index_get();
+        }
+        
+        if(!bk_files_has_data(rando.current_file)){
             uint16_t pressed = input_pressed();
             if(pressed & BUTTON_D_DOWN){
                 menu_trigger_event(rando_menu, MENU_EVENT_NAVIGATE, (void*)MENU_NAV_DOWN);
@@ -41,10 +48,16 @@ void rando_main(void){
             }
             if(pressed & BUTTON_L){
                 menu_trigger_event(rando_menu, MENU_EVENT_ACTIVATE, &event_data);
+            
             }
+            menu_trigger_event(rando_menu, MENU_EVENT_UPDATE, &event_data);
         }
         menu_trigger_event(rando_menu, MENU_EVENT_UPDATE, &event_data);
         menu_draw(rando_menu);
+    }
+    else if (bk_game_mode_get() == BK_GAME_MODE_PAUSED){
+        menu_t *pause_menu = &rando.pause_menu;
+        menu_draw(pause_menu);
     }
 }
 
@@ -64,25 +77,35 @@ void init(void){
     rando_resource_init();
     gfx_init(0x32800, resource_get(resource_handles[R_RANDO_FONT]), NULL);
 
-    list_init(&rando.watches, sizeof(watch_t));
+    //list_init(&rando.watches, sizeof(watch_t));
 
     menu_t *main_menu = &rando.main_menu;
+    menu_t *pause_menu = &rando.pause_menu;
     menu_ctx_init(main_menu, NULL);
     menu_init(main_menu, 20, 30);
+
 
     //main_menu->selected_item = menu_button_add(main_menu, 0, 0, "return", main_menu_on_activate, NULL);
     
     menu_label_add(main_menu, 0, 3, "Seed:");
-    menu_label_add(main_menu, 0, 4, "Mode:");
-    main_menu->selected_item = menu_button_add(main_menu, 6, 4, "Rando",main_menu_on_activate, NULL); // TODO set callback 
-    menu_button_add(main_menu, 12, 4, "Room-do",main_menu_on_activate, NULL); // TODO set callback 
-    menu_label_add(main_menu, 0, 5, "Length:");
-    menu_button_add(main_menu, 8, 5, "Short",main_menu_on_activate, NULL); // TODO set callback 
-    menu_button_add(main_menu, 14, 5, "Normal",main_menu_on_activate, NULL); // TODO set callback 
-    menu_button_add(main_menu, 21, 5, "Long",main_menu_on_activate, NULL); // TODO set callback 
+    rando.seed_num = menu_number_input_add(main_menu, 8, 3, 16, 8);
+    main_menu->selected_item = rando.seed_num;
+    menu_number_set(rando.seed_num, 0xDEADBEEF);
+
+    menu_label_add(main_menu, 0, 4, "Length:");
+    menu_button_add(main_menu, 8, 4, "Short",main_menu_on_activate, NULL); // TODO set callback 
+    menu_button_add(main_menu, 14, 4, "Normal",main_menu_on_activate, NULL); // TODO set callback 
+    menu_button_add(main_menu, 21, 4, "Long",main_menu_on_activate, NULL); // TODO set callback 
+
+    menu_ctx_init(pause_menu, NULL);
+    menu_init(pause_menu, 20, 30);
+    menu_label_add(pause_menu, 0, 0, "Seed:");
+    menu_item_t* pause_seed_number = menu_number_input_add(pause_menu, 6, 0, 10, 6);
+    menu_number_set(pause_seed_number, 0x00);
 
 
     rando.menu_active = 0;
+    rando.current_file = 0;
     rando.ready = 1;
     rando_binds[RANDO_CMD_TOGGLE_MENU] = make_bind(2, BUTTON_R, BUTTON_L);
     rando_binds[RANDO_CMD_RETURN] = make_bind(2, BUTTON_R, BUTTON_D_LEFT);

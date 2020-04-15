@@ -10,8 +10,6 @@ rando_vi_counter           = 0x80274578; /* need nbke */
 bk_controller_raw       = 0x802812B8;
 
 
-bk_take_me_there        = 0x802E4078;
-
 bk_player_model_update          = 0x80291d04;
 bk_player_movement_state_set    = 0x8029a72c;
 bk_transformation_set           = 0x8029a95c;
@@ -21,6 +19,12 @@ bk_moves_unlocked_set    = 0x80295818;
 bk_moves_unlocked_get    = 0x802957d8;
 bk_moves_has_used_set    = 0x802957bc;
 bk_moves_has_used_get    = 0x802957a0;
+
+bk_save_file_index_get  = 0x802c5a30; 
+
+bk_take_me_there        = 0x802E4078;
+
+bk_game_mode_get = 0x802e49fc;
 
 bk_item_array           = 0x80385f30;
 bk_item_get_count       = 0x80345fa0;
@@ -36,6 +40,8 @@ bk_mumbo_token_flag_set = 0x803215d0;
 
 bk_empty_honeycomb_flag_get = 0x803212e4;
 bk_empty_honeycomb_flag_set = 0x80321364;
+
+bk_files_has_data = 0x8033d1bc;
 
 bk_map = 0x8037E8f5;
 
