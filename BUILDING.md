@@ -7,8 +7,8 @@ via `git submodule update --init`
 To build the libunderime-f3dex submodule run `make libum`
 
 # Building
-To build all kb binaries, run `make all` to only build a sepecific version run `make kb-VERSION` Where VERSION is
-`kb-NBKJ`
+To build all kb binaries, run `make all` to only build a sepecific version run `make rando-VERSION` Where VERSION is
+`rando-NBKE`
 
 # Patching
 The patching scripts will run the building process, so you can skip the building process if you plan on patching.
