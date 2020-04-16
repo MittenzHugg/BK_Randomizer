@@ -26,4 +26,8 @@ typedef struct {
 
 
 extern rando_ctxt_t rando;
+
+void warp_interceptor(uint32_t map_indx, uint32_t exit_indx, uint32_t transition_type);
+void warp_clear_saveState_interceptor(void);
+void warp_map_flag_clear_interceptor(uint32_t map_indx);
 #endif

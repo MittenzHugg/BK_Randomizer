@@ -30,6 +30,9 @@ void rando_main(void){
             rando.current_file = bk_save_file_index_get();
             menu_number_set(rando.seed_num,rando.seed[rando.current_file]);
         }
+        if(rando_menu->selected_item == NULL && !(bk_files_has_data(bk_save_file_index_get()))){
+            rando_menu->selected_item = rando.seed_num;
+        }
         if(!bk_files_has_data(rando.current_file)){
             uint16_t pressed = input_pressed();
             if(pressed & BUTTON_D_DOWN){
@@ -170,6 +173,46 @@ void rando_load_stage2(void){
 
     osInvalICache((void*)&game_update_hook, 4);
     osInvalICache((void*)&gfx_finish_hook, 4);
+
+    //always skippable intro cutscene
+    bk_skip_intro_cutscene_hook = 0x00000000;//li v0 0x01
+    osInvalICache((void*)&bk_skip_intro_cutscene_hook, 4);
+    
+    //always skippable lair cutscene
+    bk_skip_lair_cutscene_hook = 0x00000000;
+    osInvalICache((void*)&bk_skip_lair_cutscene_hook, 4);
+    
+    //TODO always skip gameover cutscene
+
+    //map savestate clearAll => mapsavestate save and load from file
+    uint32_t warp_clear_saveState_interceptor_p = (uint32_t)&warp_clear_saveState_interceptor;
+    bk_map_savestate_clear_all_hook1 = ((warp_clear_saveState_interceptor_p & 0xFFFFFF) >> 2) | 0xC000000;
+    bk_map_savestate_clear_all_hook2 = ((warp_clear_saveState_interceptor_p & 0xFFFFFF) >> 2) | 0xC000000;
+    osInvalICache((void*)&bk_map_savestate_clear_all_hook1, 4);
+    osInvalICache((void*)&bk_map_savestate_clear_all_hook2, 4);
+    
+    //warps hook (warp mapping)
+    uint32_t warp_interceptor_p = (uint32_t)&warp_interceptor;
+    bk_map_exit_no_reset_set_hook = ((warp_interceptor_p & 0xFFFFFF) >> 2) | 0xC000000;
+    osInvalICache((void*)&bk_map_exit_no_reset_set_hook, 4);
+
+    //return to last exit on voidout/deathwarp
+    bk_void_to_map_logic = 0x10000004; //beq zero, zero
+    osInvalICache((void*)&bk_void_to_map_logic, 4);
+    
+    //remove level reset on deathwarp
+    uint32_t take_me_there_p = (uint32_t)&bk_take_me_there;
+    bk_deathwarp_take_me_there_hook =((take_me_there_p & 0xFFFFFF) >> 2) | 0xC000000;
+    osInvalICache((void*)&bk_deathwarp_take_me_there_hook, 4);
+    //new file hook
+
+    uint32_t* tmp_p = 0x8031ac18; 
+    *tmp_p = 0x00000000;
+    osInvalICache((void*)tmp_p, 4);
+    
+    tmp_p = 0x803218e0; 
+    *tmp_p = 0x00000000;
+    osInvalICache((void*)tmp_p, 4);
 }
 
 void rando_load_stage1(void){
@@ -178,6 +221,5 @@ void rando_load_stage1(void){
     uint32_t rando_load_stage2_p = (uint32_t)&rando_load_stage2;
     rando_load_stage2_p = ((rando_load_stage2_p & 0xFFFFFF) >> 2) | 0xC000000;
     load_code_stage2_hook = rando_load_stage2_p;
-
     osInvalICache((void*)&load_code_stage2_hook, 4);
 }

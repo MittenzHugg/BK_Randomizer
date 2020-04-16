@@ -8,7 +8,7 @@ bk_gfx_finish           = 0x80253DE0;
 gfx_finish_hook         = 0x802E3B7C;
 rando_vi_counter           = 0x80274578; /* need nbke */
 bk_controller_raw       = 0x802812B8;
-
+bk_void_to_map_logic    = 0x8029c618;
 
 bk_player_model_update          = 0x80291d04;
 bk_player_movement_state_set    = 0x8029a72c;
@@ -23,11 +23,21 @@ bk_moves_has_used_get    = 0x802957a0;
 bk_save_file_index_get  = 0x802c5a30; 
 
 bk_take_me_there        = 0x802E4078;
+bk_map_exit_no_reset_set_hook = 0x802E4080;
+bk_map_exit_no_reset_set = 0x802E40d0;
+bk_deathwarp_take_me_there_hook = 0x8029b6d8;
+
+bk_map_savestate_clear_all      = 0x802e2e7c;
+bk_map_savestate_clear_all_hook1 = 0x803218e0;
+bk_map_savestate_clear_all_hook2 = 0x8031AC18;
 
 bk_game_mode_get = 0x802e49fc;
 
 bk_item_array           = 0x80385f30;
 bk_item_get_count       = 0x80345fa0;
+
+bk_skip_intro_cutscene_hook = 0x8031c664;
+bk_skip_lair_cutscene_hook = 0x8031c6c8;
 
 bk_global_flag_get      = 0x8031ff1c;
 bk_global_flag_set      = 0x80320004;
