@@ -2,19 +2,22 @@
 #include "bk.h"
 #include "sys.h"
 
-//intercepts takeMeThere
-void warp_interceptor(uint32_t map_indx, uint32_t exit_indx, uint32_t transition_type){
-    uint32_t rando_map_indx = map_indx;
-    uint32_t rando_exit_indx = exit_indx;
-    
-    // TODO look up shuffled map_exit pair from generated lookup table;
+void warp_generate_mapping(void){
+    // TODO generate Loadzone Mapping
 
-    bk_map_exit_no_reset_set(rando_map_indx, rando_exit_indx, transition_type);
     return;
 }
 
-void warp_generate_mapping(void){
-    //TODO generate Loadzone Mapping
+void warp_interceptor(uint32_t old_map, uint32_t old_exit, uint32_t transition_type){
+    uint32_t new_map = map_indx;
+    uint32_t new_exit = exit_indx;
+    
+    /* TODO 
+       old map and exit -> new map and exit
+       based on mapping generated in warp_generate_mapping();
+    */
+
+    bk_map_exit_no_reset_set(new_map, new_exit, transition_type);
     return;
 }
 
