@@ -18,6 +18,7 @@ typedef struct {
     char       *tooltip;
     struct list watches;
     uint32_t    current_file;
+    uint32_t    current_seed;
     uint32_t    seed[4];
     rando_mode_t mode[4];
     menu_item_t* seed_num;

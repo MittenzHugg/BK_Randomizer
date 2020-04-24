@@ -22,22 +22,6 @@ void rando_main(void){
     if(rando.menu_active){
         menu_t *rando_menu = &rando.main_menu;
         if(rando.current_file != bk_save_file_index_get()){
-            //Save seed to ED file
-            rando.cwd_name = getcwd(rando.cwd_name,40);
-            int f = creat("./seeddata.bk_rand", O_WRONLY);
-            if(f != -1){
-                int n_seed = 3*sizeof(uint32_t);
-                write(f,rando.seed, n_seed);
-                
-                int n_length = 3*sizeof(rando_mode_t);
-                write(f, rando.mode, n_length) != n_length){
-                
-                close(f);
-            }
-            }
-            else{
-            rando.cwd_name = strerror(errno);
-            }
 
             if(bk_files_has_data(bk_save_file_index_get())){                
                 rando_menu->selected_item = NULL;
@@ -46,6 +30,7 @@ void rando_main(void){
             }
             rando.current_file = bk_save_file_index_get();
             menu_number_set(rando.seed_num,rando.seed[rando.current_file]);
+            rando.current_seed = rando.seed[rando.current_file];
         }
         if(rando_menu->selected_item == NULL && !(bk_files_has_data(bk_save_file_index_get()))){
             rando_menu->selected_item = rando.seed_num;
@@ -155,8 +140,7 @@ void init(void){
     menu_init(pause_menu, 20, 30);
     menu_label_add(pause_menu, 0, 0, "Seed:");
     menu_item_t* pause_seed_number = menu_number_input_add(pause_menu, 6, 0, 10, 6);
-    menu_number_set(pause_seed_number, 0x00);
-
+    
 
     rando.menu_active = 0;
     rando.current_file = 0;
@@ -205,6 +189,10 @@ void init(void){
     if (err_str)
         rando.cwd_name = err_str;
     
+    rando.current_file = 0;
+    rando.current_seed = rando.seed[rando.current_file];
+    menu_number_set(pause_seed_number, rando.current_seed);
+
 }
 
 int _main(void){
@@ -216,6 +204,29 @@ int _main(void){
     int ret = (int)_rando_exit();
     rando_main();
     return ret;
+}
+
+void start_new_wrapping(uint map,  uint exit, uint transition){
+    //Save seed to ED file
+    rando.cwd_name = getcwd(rando.cwd_name,40);
+    int f = creat("./seeddata.bk_rand", O_WRONLY);
+    if(f != -1){
+        int n_seed = 3*sizeof(uint32_t);
+        write(f,rando.seed, n_seed);
+        
+        int n_length = 3*sizeof(rando_mode_t);
+        write(f, rando.mode, n_length);
+        
+        close(f);
+    }
+    else{
+    rando.cwd_name = strerror(errno);
+    }
+
+    warp_generate_mapping();
+
+    bk_take_me_there(map, exit, transition);
+    return;
 }
 
 void rando_gfx_append(Gfx **p_gfx_p){
@@ -268,7 +279,21 @@ void rando_load_stage2(void){
     uint32_t take_me_there_p = (uint32_t)&bk_take_me_there;
     bk_deathwarp_take_me_there_hook =((take_me_there_p & 0xFFFFFF) >> 2) | 0xC000000;
     osInvalICache((void*)&bk_deathwarp_take_me_there_hook, 4);
-    //new file hook
+    
+    //start new file hook
+    uint32_t* start_file_lower_hook = 0x802c5104;
+    uint32_t* start_file_upper_hook = 0x802c50f8;
+    uint32_t warp_gen_p = (uint32_t)&start_new_wrapping; 
+    uint32_t warp_gen_upper = (warp_gen_p >> 16) & 0xFFFF;
+    uint32_t warp_gen_lower = warp_gen_p & 0xFFFF;
+    if (warp_gen_lower>0x7FFF){
+        ++warp_gen_upper;
+    }
+    *start_file_lower_hook &= 0xFFFF0000;
+    *start_file_lower_hook |= warp_gen_lower;
+    *start_file_upper_hook &= 0xFFFF0000;
+    *start_file_upper_hook |= warp_gen_upper;
+    // TODO 
 
     //bk_map_reset_hook = 0x00000000;//nop
     //osInvalICache((void*)&bk_map_reset_hook, 4);
