@@ -258,28 +258,9 @@ void rando_load_stage2(void){
     osInvalICache((void*)&bk_skip_lair_cutscene_hook, 4);
     
     // TODO always skip gameover cutscene
+    
+    rando_warps_init();
 
-    //map savestate clearAll => mapsavestate save and load from file
-    uint32_t warp_clear_saveState_interceptor_p = (uint32_t)&warp_clear_saveState_interceptor;
-    bk_map_savestate_clear_all_hook1 = ((warp_clear_saveState_interceptor_p & 0xFFFFFF) >> 2) | 0xC000000;
-    bk_map_savestate_clear_all_hook2 = ((warp_clear_saveState_interceptor_p & 0xFFFFFF) >> 2) | 0xC000000;
-    osInvalICache((void*)&bk_map_savestate_clear_all_hook1, 4);
-    osInvalICache((void*)&bk_map_savestate_clear_all_hook2, 4);
-    
-    //warps hook (warp mapping)
-    uint32_t warp_interceptor_p = (uint32_t)&warp_interceptor;
-    bk_map_exit_no_reset_set_hook = ((warp_interceptor_p & 0xFFFFFF) >> 2) | 0xC000000;
-    osInvalICache((void*)&bk_map_exit_no_reset_set_hook, 4);
-
-    //return to last exit on voidout/deathwarp
-    bk_void_to_map_logic = 0x10000004; //beq zero, zero
-    osInvalICache((void*)&bk_void_to_map_logic, 4);
-    
-    //remove level reset on deathwarp
-    uint32_t take_me_there_p = (uint32_t)&bk_take_me_there;
-    bk_deathwarp_take_me_there_hook =((take_me_there_p & 0xFFFFFF) >> 2) | 0xC000000;
-    osInvalICache((void*)&bk_deathwarp_take_me_there_hook, 4);
-    
     //start new file hook
     uint32_t* start_file_lower_hook = 0x802c5104;
     uint32_t* start_file_upper_hook = 0x802c50f8;
@@ -293,19 +274,11 @@ void rando_load_stage2(void){
     *start_file_lower_hook |= warp_gen_lower;
     *start_file_upper_hook &= 0xFFFF0000;
     *start_file_upper_hook |= warp_gen_upper;
-    // TODO 
 
-    //bk_map_reset_hook = 0x00000000;//nop
-    //osInvalICache((void*)&bk_map_reset_hook, 4);
 
-    //bk_map_savestate_clear_all_hook1 = 0x00000000;
-    //osInvalICache((void*)&bk_map_savestate_clear_all_hook1, 4);
+    rando_savestates_init();
 
-    //bk_map_savestate_clear_all_hook2 = 0x00000000;
-    //osInvalICache((void*)&bk_map_savestate_clear_all_hook2, 4);
-
-    //bk_map_savestate_clear_all_hook3 = 0x00000000;
-    //osInvalICache((void*)&bk_map_savestate_clear_all_hook3, 4);
+    
 }
 
 void rando_load_stage1(void){

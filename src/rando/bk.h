@@ -131,10 +131,13 @@ bk_extern   uint32_t        bk_map_exit_no_reset_set_hook;
 bk_extern   void            bk_map_exit_no_reset_set    (uint32_t map_indx, uint32_t exit_indx, uint32_t transition_type);
 
 bk_extern   uint32_t        bk_map_savestate_clear_all_hook1;
-bk_extern   uint32_t        bk_map_savestate_clear_all_hook2;
-bk_extern   uint32_t        bk_map_savestate_clear_all_hook3;
-bk_extern   uint32_t        bk_map_reset_hook;
 bk_extern   void            bk_map_savestate_clear_all(void);
+bk_extern   uint32_t        bk_map_savestate_clear_hook;
+bk_extern   uint32_t        bk_map_savestate_save_hook;
+bk_extern   void            bk_map_savestate_save(uint32_t map_indx);
+bk_extern   uint32_t        bk_restore_health_hook;
+bk_extern   void            bk_restore_health(void);
+bk_extern   uint32_t        bk_map_reset_hook;
 
 bk_extern   uint32_t        bk_skip_intro_cutscene_hook;
 bk_extern   uint32_t        bk_skip_lair_cutscene_hook;
