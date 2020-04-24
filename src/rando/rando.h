@@ -21,6 +21,7 @@ typedef struct {
     uint32_t    seed[4];
     rando_mode_t mode[4];
     menu_item_t* seed_num;
+    char       *cwd_name;
 } rando_ctxt_t;
 
 

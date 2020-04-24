@@ -6,6 +6,7 @@
 #include "commands.h"
 #include "randoresource.h"
 #include "start.h"
+#include "sys.h"
 
 __attribute__((section(".data")))
 rando_ctxt_t rando = {
@@ -21,7 +22,23 @@ void rando_main(void){
     if(rando.menu_active){
         menu_t *rando_menu = &rando.main_menu;
         if(rando.current_file != bk_save_file_index_get()){
-            // TODO save old seed to ED file
+            //Save seed to ED file
+            rando.cwd_name = getcwd(rando.cwd_name,40);
+            int f = creat("./seeddata.bk_rand", O_WRONLY);
+            if(f != -1){
+                int n_seed = 3*sizeof(uint32_t);
+                write(f,rando.seed, n_seed);
+                
+                int n_length = 3*sizeof(rando_mode_t);
+                write(f, rando.mode, n_length) != n_length){
+                
+                close(f);
+            }
+            }
+            else{
+            rando.cwd_name = strerror(errno);
+            }
+
             if(bk_files_has_data(bk_save_file_index_get())){                
                 rando_menu->selected_item = NULL;
             } else {
@@ -118,6 +135,15 @@ void init(void){
     menu_item_t* short_button = menu_button_add(main_menu, 8, 4, "Short",rando_mode_set, RANDO_MODE_SHORT);
     menu_item_register_event(short_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_SHORT);
 
+    rando.cwd_name = (char *) malloc(40);
+    //menu_label_add(main_menu, 0, 5,rando.cwd_name);
+
+    if(mkdir("bk_rando", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)){
+        rando.cwd_name = "could not make dir \"\\bk_rando\\\"";
+    }
+    chdir("bk_rando");
+        
+
     menu_item_t* normal_button = menu_button_add(main_menu, 14, 4, "Normal",rando_mode_set, RANDO_MODE_NORMAL);
     normal_button->color = COLOR_GREEN;
     menu_item_register_event(normal_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_NORMAL);
@@ -135,12 +161,50 @@ void init(void){
     rando.menu_active = 0;
     rando.current_file = 0;
     rando.ready = 1;
-    for(int i=0; i<4; i++){
-        // TODO load info from ED file
-        rando.seed[i]=i;
-        rando.mode[i]=RANDO_MODE_NORMAL;
-        menu_number_set(rando.seed_num, rando.seed[rando.current_file]);
+
+    //TODO load file data from ED
+    const char *s_eof = "unexpected end of file";
+    const char *s_memory = "out of memory";
+    const char *err_str = NULL;
+    int f = open("./seeddata.bk_rand", O_RDONLY);
+    if(f== -1) rando.cwd_name = "ERROR: OPENING seeddata.bk_rand";
+    else{
+        if (f != -1){
+            struct stat st;
+            fstat(f, &st);
+            int n_seed = 3*sizeof(uint32_t);
+            //read seeds
+            if(read(f, rando.seed, n_seed) != n_seed){
+                err_str = s_eof;
+                goto f_err;
+            }
+
+            int n_length = 3*sizeof(rando_mode_t);
+            //read length
+            if(read(f, rando.mode, n_length) != n_length){
+                err_str = s_eof;
+                goto f_err;
+            }
+    f_err:
+            sys_io_mode(SYS_IO_PIO);
+            if (errno != 0)
+                err_str = strerror(errno);
+            else
+                err_str = strerror(errno);
+        }
     }
+    if (f != -1)
+        close(f);
+    else{
+        for(int i=0; i<3; i++){
+            rando.seed[i]=0;
+            rando.mode[i]=RANDO_MODE_NORMAL;
+            menu_number_set(rando.seed_num, rando.seed[rando.current_file]);
+        }
+    }
+    if (err_str)
+        rando.cwd_name = err_str;
+    
 }
 
 int _main(void){
@@ -182,7 +246,7 @@ void rando_load_stage2(void){
     bk_skip_lair_cutscene_hook = 0x00000000;
     osInvalICache((void*)&bk_skip_lair_cutscene_hook, 4);
     
-    //TODO always skip gameover cutscene
+    // TODO always skip gameover cutscene
 
     //map savestate clearAll => mapsavestate save and load from file
     uint32_t warp_clear_saveState_interceptor_p = (uint32_t)&warp_clear_saveState_interceptor;
@@ -206,13 +270,17 @@ void rando_load_stage2(void){
     osInvalICache((void*)&bk_deathwarp_take_me_there_hook, 4);
     //new file hook
 
-    uint32_t* tmp_p = 0x8031ac18; 
-    *tmp_p = 0x00000000;
-    osInvalICache((void*)tmp_p, 4);
-    
-    tmp_p = 0x803218e0; 
-    *tmp_p = 0x00000000;
-    osInvalICache((void*)tmp_p, 4);
+    //bk_map_reset_hook = 0x00000000;//nop
+    //osInvalICache((void*)&bk_map_reset_hook, 4);
+
+    //bk_map_savestate_clear_all_hook1 = 0x00000000;
+    //osInvalICache((void*)&bk_map_savestate_clear_all_hook1, 4);
+
+    //bk_map_savestate_clear_all_hook2 = 0x00000000;
+    //osInvalICache((void*)&bk_map_savestate_clear_all_hook2, 4);
+
+    //bk_map_savestate_clear_all_hook3 = 0x00000000;
+    //osInvalICache((void*)&bk_map_savestate_clear_all_hook3, 4);
 }
 
 void rando_load_stage1(void){

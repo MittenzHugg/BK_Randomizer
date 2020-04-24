@@ -28,8 +28,10 @@ bk_map_exit_no_reset_set = 0x802E40d0;
 bk_deathwarp_take_me_there_hook = 0x8029b6d8;
 
 bk_map_savestate_clear_all      = 0x802e2e7c;
+bk_map_reset_hook               = 0x802e38f4;
 bk_map_savestate_clear_all_hook1 = 0x803218e0;
 bk_map_savestate_clear_all_hook2 = 0x8031AC18;
+bk_map_savestate_clear_all_hook3 = 0x802e3888;
 
 bk_game_mode_get = 0x802e49fc;
 

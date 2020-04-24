@@ -132,6 +132,8 @@ bk_extern   void            bk_map_exit_no_reset_set    (uint32_t map_indx, uint
 
 bk_extern   uint32_t        bk_map_savestate_clear_all_hook1;
 bk_extern   uint32_t        bk_map_savestate_clear_all_hook2;
+bk_extern   uint32_t        bk_map_savestate_clear_all_hook3;
+bk_extern   uint32_t        bk_map_reset_hook;
 bk_extern   void            bk_map_savestate_clear_all(void);
 
 bk_extern   uint32_t        bk_skip_intro_cutscene_hook;
