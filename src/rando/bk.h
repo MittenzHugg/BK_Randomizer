@@ -219,4 +219,17 @@ bk_extern   uint32_t    bk_level_high_note_score_get(bk_level_t level);
 
 bk_extern   void        bk_item_overlays_instaupdate_values(void);
 
+bk_extern   uint32_t    bk_level_flags_get_n(uint32_t indx, uint32_t n);
+bk_extern   void        bk_level_flags_set_n(uint32_t index, uint32_t val, uint32_t n);
+
+bk_extern   uint32_t    bk_item_blubber_gold_reset_hook;
+bk_extern   uint32_t    bk_item_conga_orange_reset_hook;
+bk_extern   uint32_t    bk_item_nabnut_acorn_reset_hook;
+
+
+bk_extern   uint32_t    bk_item_present_g_reset_hook;
+bk_extern   uint32_t    bk_item_present_b_reset_hook;
+bk_extern   uint32_t    bk_item_present_r_reset_hook;
+
+bk_extern   uint32_t    bk_item_catepillar_reset_hook;
 #endif

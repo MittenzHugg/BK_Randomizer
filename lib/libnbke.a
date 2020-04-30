@@ -91,3 +91,16 @@ bk_level_get = 0x80321900;
 bk_level_high_note_score_get = 0x80346f34;
 
 bk_item_overlays_instaupdate_values = 0x802fa5d0; 
+
+bk_level_flags_get_n = 0x80321f0c;
+bk_level_flags_set_n = 0x80322004;
+
+bk_item_blubber_gold_reset_hook = 0x8034657C;
+bk_item_conga_orange_reset_hook = 0x80346580;
+bk_item_nabnut_acorn_reset_hook = 0x80346584;
+
+bk_item_present_g_reset_hook = 0x80346590;
+bk_item_present_b_reset_hook = 0x80346594; 
+bk_item_present_r_reset_hook = 0x80346598; 
+
+bk_item_catepillar_reset_hook = 0x803465a0;

@@ -6,6 +6,8 @@
 static const save_ratio = 4;
 
 static uint32_t level_jinjos[0x0E];
+static uint32_t level_flags[0x0E][2];
+
 
 void rando_restore_items(void){
     bk_restore_health(); //Hooked Function DO NOT REMOVE
@@ -16,6 +18,10 @@ void rando_restore_items(void){
     if(currLevel != BK_LEVEL_LAIR){
         (&bk_item_array)[BK_ITEM_MUSIC_NOTE] = bk_level_high_note_score_get(currLevel);
     }
+
+    bk_level_flags_set_n(0, level_flags[currLevel][0], 32);
+    bk_level_flags_set_n(32, level_flags[currLevel][1], 32);
+
     //ToDo: call insta-update print item totals
     bk_item_overlays_instaupdate_values();
 }
@@ -23,7 +29,8 @@ void rando_restore_items(void){
 void rando_save_items(void){
     bk_level_t currLevel = bk_level_get();
     level_jinjos[currLevel] = bk_item_get_count(BK_ITEM_JINJO);
-
+    level_flags[currLevel][0] = bk_level_flags_get_n(0,32);
+    level_flags[currLevel][1] = bk_level_flags_get_n(32,32);
 }
 
 void rando_ss_free(void * ptr){
@@ -116,4 +123,25 @@ void rando_savestates_init(void){
     reload_p = ((reload_p & 0xFFFFFF) >> 2 ) | 0xC000000;
     bk_restore_health_hook = reload_p;
     osInvalICache((void*)&bk_restore_health_hook, 4);
+
+    rando_maintain_level_items_init();
+}
+
+void rando_maintain_level_items_init(void){
+    bk_item_blubber_gold_reset_hook = 0x00000000;
+    bk_item_conga_orange_reset_hook = 0x00000000;
+    bk_item_nabnut_acorn_reset_hook = 0x00000000;
+    osInvalICache((void*)&bk_item_blubber_gold_reset_hook, 0xC);
+
+    bk_item_present_g_reset_hook = 0x00000000;
+    bk_item_present_b_reset_hook = 0x00000000;
+    bk_item_present_r_reset_hook = 0x00000000;
+    osInvalICache((void*)&bk_item_present_g_reset_hook, 0xC);
+
+    bk_item_catepillar_reset_hook = 0x00000000;
+    osInvalICache((void*)&bk_item_catepillar_reset_hook, 0x4);
+
+
+
+
 }
