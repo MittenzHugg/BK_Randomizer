@@ -17,7 +17,7 @@ void rando_restore_items(void){
         (&bk_item_array)[BK_ITEM_MUSIC_NOTE] = bk_level_high_note_score_get(currLevel);
     }
     //ToDo: call insta-update print item totals
-    
+    bk_item_overlays_instaupdate_values();
 }
 
 void rando_save_items(void){
