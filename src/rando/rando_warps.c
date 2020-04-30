@@ -10,6 +10,8 @@ void warp_interceptor(uint32_t old_map, uint32_t old_exit, uint32_t transition_t
        old map and exit -> new map and exit
        based on mapping generated in warp_generate_mapping();
     */
+   //new_map = 0x01;
+   //new_exit = 0x12;
 
     bk_map_exit_no_reset_set(new_map, new_exit, transition_type);
     return;

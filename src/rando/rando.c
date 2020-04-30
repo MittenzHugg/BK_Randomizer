@@ -17,6 +17,7 @@ void rando_main(void){
     gfx_begin();
     input_update();
 
+
     void *event_data = NULL;
     rando.menu_active = (bk_map == 0x91); //activate menu when on select screen 0x91
     if(rando.menu_active){

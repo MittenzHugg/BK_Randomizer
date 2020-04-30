@@ -27,12 +27,33 @@ bk_map_exit_no_reset_set_hook = 0x802E4080;
 bk_map_exit_no_reset_set = 0x802E40d0;
 bk_deathwarp_take_me_there_hook = 0x8029b6d8;
 
+bk_map_savestate_ptr_array      = 0x8037e650;
+
 bk_map_savestate_clear_all      = 0x802e2e7c;
+
 bk_map_reset_hook               = 0x802e38f4;
+
 bk_map_savestate_clear_all_hook1 = 0x803218e0;
+
 bk_map_savestate_clear_hook = 0x80321758;
+
 bk_map_savestate_save_hook = 0x802e3f20;
+
+bk_defrag = 0x802555dc;
+bk_free = 0x802550f0;
+bk_realloc = 0x80255358;
+bk_malloc = 0x80254ca8;
+
 bk_map_savestate_save = 0x802e2f2c;
+bk_map_savestate_clearAll_freeCall = 0x802e2ea8;
+bk_map_savestate_defrag_defragCall = 0x802e2f00;
+bk_map_savestate_save_freeCall = 0x802e2f6c;
+bk_map_savestate_save_mallocCall = 0x802e2f74;
+bk_map_savestate_save_reallocCall = 0x802e2fd8;
+bk_map_savestate_saveActors_reallocCall = 0x80329d80;
+bk_map_savestate_apply_freeCall = 0x802e31a8;
+
+
 bk_restore_health_hook = 0x802e3f64;
 bk_restore_health = 0x80346ca8;
 
@@ -62,3 +83,7 @@ bk_files_has_data = 0x8033d1bc;
 bk_map = 0x8037E8f5;
 
 bk_high_note_scores = 0x80385ff0;
+
+bk_printf = 0x802f78fc;
+
+bk_level_get = 0x80321900;

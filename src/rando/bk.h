@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <libundermine.h>
+#include "ultratypes.h"
 
 typedef struct{
     union{
@@ -38,6 +39,22 @@ typedef enum game_mode{
     BK_GAME_MODE_BANJO_AND_KAZOOIE = 0x09,
     BK_GAME_MODE_SNS_PICTURE = 0x0a,
 } bk_game_mode_t;
+
+typedef enum level{
+    BK_LEVEL_MM     = 0x01,
+    BK_LEVEL_TTC    = 0x02,
+    BK_LEVEL_CC     = 0x03,
+    BK_LEVEL_BGS    = 0x04,
+    BK_LEVEL_FP     = 0x05,
+    BK_LEVEL_LAIR   = 0x06,
+    BK_LEVEL_GV     = 0x07,
+    BK_LEVEL_CCW    = 0x08,
+    BK_LEVEL_RBB    = 0x09,
+    BK_LEVEL_MMM    = 0x0a,
+    BK_LEVEL_SM     = 0x0b,
+    BK_LEVEL_FIGHT  = 0x0c,
+    BK_LEVEL_CUTSCENE = 0x0d,
+} bk_level_t;
 
 typedef enum moves{
     bk_moves_beakBarge = 0,
@@ -130,11 +147,27 @@ bk_extern   uint32_t        bk_deathwarp_take_me_there_hook;
 bk_extern   uint32_t        bk_map_exit_no_reset_set_hook;
 bk_extern   void            bk_map_exit_no_reset_set    (uint32_t map_indx, uint32_t exit_indx, uint32_t transition_type);
 
+bk_extern   uint32_t        bk_map_savestate_ptr_array;           
 bk_extern   uint32_t        bk_map_savestate_clear_all_hook1;
 bk_extern   void            bk_map_savestate_clear_all(void);
 bk_extern   uint32_t        bk_map_savestate_clear_hook;
+//bk_extern   void            bk_map_savestate_clear(u32 map_indx);
 bk_extern   uint32_t        bk_map_savestate_save_hook;
-bk_extern   void            bk_map_savestate_save(uint32_t map_indx);
+bk_extern   void            bk_map_savestate_save(u32 map_indx);
+
+bk_extern   void*           bk_defrag(void *);
+bk_extern   void            bk_free(void *);
+bk_extern   void*           bk_realloc(void* src, size_t size);
+bk_extern   void*           bk_malloc(size_t size);
+
+bk_extern   uint32_t        bk_map_savestate_clearAll_freeCall;
+bk_extern   uint32_t        bk_map_savestate_defrag_defragCall;
+bk_extern   uint32_t        bk_map_savestate_save_freeCall;
+bk_extern   uint32_t        bk_map_savestate_save_mallocCall;
+bk_extern   uint32_t        bk_map_savestate_save_reallocCall;
+bk_extern   uint32_t        bk_map_savestate_saveActors_reallocCall;
+bk_extern   uint32_t        bk_map_savestate_apply_freeCall;
+
 bk_extern   uint32_t        bk_restore_health_hook;
 bk_extern   void            bk_restore_health(void);
 bk_extern   uint32_t        bk_map_reset_hook;
@@ -179,5 +212,8 @@ bk_extern   void        bk_mumbo_token_flag_set   (uint32_t mt_index, bool val);
 bk_extern   bool        bk_empty_honeycomb_flag_get   (uint32_t honeycomb_index);
 bk_extern   void        bk_empty_honeycomb_flag_set   (uint32_t honeycomb_index, bool val);
 
+bk_extern   void        bk_printf   (uint32_t x, uint32_t y, char* str);
+
+bk_extern   bk_level_t  bk_level_get(void);
 
 #endif
