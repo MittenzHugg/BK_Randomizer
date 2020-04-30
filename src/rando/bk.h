@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <libundermine.h>
-#include "ultratypes.h"
+#include "simptypes.h"
 
 typedef struct{
     union{
