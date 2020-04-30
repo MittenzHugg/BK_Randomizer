@@ -1,4 +1,4 @@
-# Randjo-Kazooie
+# BK_Randomizer
 Banjo-Kazooie Randomizer
 
 # Special Thanks
