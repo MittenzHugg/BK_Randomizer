@@ -13,8 +13,11 @@ void rando_restore_items(void){
     bk_level_t currLevel = bk_level_get();
 
     (&bk_item_array)[BK_ITEM_JINJO] = level_jinjos[currLevel];
-    //ToDo: restore note counts to high note score;
-    //ToDo: restore jinjo counts;
+    if(currLevel != BK_LEVEL_LAIR){
+        (&bk_item_array)[BK_ITEM_MUSIC_NOTE] = bk_level_high_note_score_get(currLevel);
+    }
+    //ToDo: call insta-update print item totals
+    
 }
 
 void rando_save_items(void){

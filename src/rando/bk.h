@@ -215,5 +215,6 @@ bk_extern   void        bk_empty_honeycomb_flag_set   (uint32_t honeycomb_index,
 bk_extern   void        bk_printf   (uint32_t x, uint32_t y, char* str);
 
 bk_extern   bk_level_t  bk_level_get(void);
+bk_extern   uint32_t    bk_level_high_note_score_get(bk_level_t level);
 
 #endif

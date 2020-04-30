@@ -87,3 +87,4 @@ bk_high_note_scores = 0x80385ff0;
 bk_printf = 0x802f78fc;
 
 bk_level_get = 0x80321900;
+bk_level_high_note_score_get = 0x80346f34;
