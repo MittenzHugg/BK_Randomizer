@@ -1,15 +1,18 @@
 #include "warps.h"
 
+//node info
+
 const warp_t vanilla_pairs[] = {
 
     // SM,sm
+    //todo handle SM differently
     {{0x01,0x12}, {0x8C,0x01}, 0, 0}, //SM,sm <- SM,banjo_house
     {{0x01,0x13}, {0x69,0x12}, 0, 0}, //SM,sm <- lair,mm_loby
 
     //MM,mm
     {{0x02,0x01}, {0x0E,0x01}, 0, 0}, //MM,mm <- MM,mm_mumbos
     {{0x02,0x02}, {0x0C,0x02}, 0, 0}, //MM,mm <- MM,mm_tickers_lower
-    {{0x02,0x03}, {0x0C,0x01}, 0, WARP_FLAG_BEE | WARP_FLAG_INACCESSIBLE}, //MM,mm <- MM,mm_tickers_upper
+    {{0x02,0x03}, {0x0C,0x01}, 0, WARP_FLAG_INACCESSIBLE}, //MM,mm <- MM,mm_tickers_upper
     //{{0x02,0x04}, {,}, WARP_FLAG_ONEWAY}, //MM,witchswitch
     {{0x02,0x04}, {0x69,0x02}, 0, 0}, //MM,mm <- lair,mm_lobby
 
@@ -25,11 +28,11 @@ const warp_t vanilla_pairs[] = {
     {{0x07,0x04}, {0x6D, 0x04}, 0, 0}, //TTC,ttc <- lair,ttc_lobby
     {{0x07,0x06}, {0x05, 0x05}, 0, WARP_FLAG_BEAK_BUST | WARP_FLAG_EGGS}, //TTC,ttc <- TTC,blubber_ship_top
     {{0x07,0x07}, {0x05, 0x06}, 0, 0},      //TTC,ttc <- TTC,blubber_ship_bottom
-    {{0x07,0x08}, {0x07, 0x0C}, 0, WARP_FLAG_FLIGHT | WARP_FLAG_BEE},      //TTC,lighthouse_top <- TTC,lighthouse_bottom
+    {{0x07,0x08}, {0x07, 0x0C}, 0, WARP_FLAG_FLIGHT },      //TTC,lighthouse_top <- TTC,lighthouse_bottom
     {{0x07,0x0A}, {0x06, 0x01}, 0, 0}, //TTC,ttc <- TTC,nipper_shell
-    {{0x07,0x0C}, {0x07, 0x08}, 0, WARP_FLAG_FLIGHT | WARP_FLAG_BEE},      //TTC,stairs_top <- TTC,stairs_bottom
-    {{0x07,0x0E}, {0x07, 0x0F}, 0, WARP_FLAG_FLIGHT | WARP_FLAG_BEE},      //TTC,stairs_bottom <- TTC,stairs_top
-    {{0x07,0x0F}, {0x07, 0x0E}, 0, WARP_FLAG_FLIGHT | WARP_FLAG_BEE},      //TTC,lighthouse_bottom <- TTC,lighthouse_top
+    {{0x07,0x0C}, {0x07, 0x08}, 0, WARP_FLAG_FLIGHT },      //TTC,stairs_top <- TTC,stairs_bottom
+    {{0x07,0x0E}, {0x07, 0x0F}, 0, WARP_FLAG_FLIGHT },      //TTC,stairs_bottom <- TTC,stairs_top
+    {{0x07,0x0F}, {0x07, 0x0E}, 0, WARP_FLAG_FLIGHT },      //TTC,lighthouse_bottom <- TTC,lighthouse_top
     //0x14 witch_switch
     //0x80 sharkfood_island
 
@@ -253,7 +256,7 @@ const warp_t vanilla_pairs[] = {
     {{0x40,0x07}, {0x79,0x06}, 0, 0}, //CCW,hub <- lair,ccw_lobby
 
     //FP,igloo
-    {{0x41,0x01}, {0x27,0x00}, 0, 0}, //FP,igloo <- FP,fp
+    {{0x41,0x01}, {0x27,0x08}, 0, 0}, //FP,igloo <- FP,fp
 
     //CCW_Spring
     {{0x43,0x01}, {0x40,0x02}, 0, 0}, //CCW,spring <- CCW,hub

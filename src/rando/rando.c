@@ -221,7 +221,7 @@ void start_new_wrapping(uint map,  uint exit, uint transition){
         close(f);
     }
     else{
-    rando.cwd_name = strerror(errno);
+        rando.cwd_name = strerror(errno);
     }
 
     warp_generate_mapping();
@@ -275,6 +275,8 @@ void rando_load_stage2(void){
     *start_file_lower_hook |= warp_gen_lower;
     *start_file_upper_hook &= 0xFFFF0000;
     *start_file_upper_hook |= warp_gen_upper;
+    osInvalICache((void*)&start_file_lower_hook, 4);
+    osInvalICache((void*)&start_file_upper_hook, 4);
 
 
     rando_savestates_init();
