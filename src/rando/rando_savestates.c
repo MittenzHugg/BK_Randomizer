@@ -124,6 +124,7 @@ void rando_savestates_init(void){
     bk_restore_health_hook = reload_p;
     osInvalICache((void*)&bk_restore_health_hook, 4);
 
+    //don't reset level specific items
     rando_maintain_level_items_init();
 }
 
@@ -140,8 +141,4 @@ void rando_maintain_level_items_init(void){
 
     bk_item_catepillar_reset_hook = 0x00000000;
     osInvalICache((void*)&bk_item_catepillar_reset_hook, 0x4);
-
-
-
-
 }

@@ -80,7 +80,7 @@ static rando_scene_t TTC_scenes[5] = {
             {0x01, ""},
         }
     },
-    { "insdie sharkfood island",
+    { "inside sharkfood island",
         0x8f, 1,
         (rando_entrance_t[]){
             {0x01, ""},
@@ -148,7 +148,7 @@ static rando_scene_t BGS_scenes[4] = {
         0x10, 2,
         (rando_entrance_t[]){
             {0x04, "from right nostile"},
-            {0x04, "from left nostile"},
+            {0x05, "from left nostile"},
         }
     },
     { "inside tanktup",
@@ -258,21 +258,6 @@ static rando_scene_t MMM_scenes[16] = {
         0x1B, 18,
         (rando_entrance_t[]){
             {0x14, "from gruntilda's lair"},
-            {0x01, "from dining room"},
-            {0x03, "well - top"},
-            {0x04, "from tumblar's shed"},
-            {0x05, "from church"},
-            {0x06, "church - secret window"},
-            {0x08, "from rain barrel"},
-            {0x09, "from cellar"},
-            {0x0A, "from red feather room"},
-            {0x0B, "from blue egg room"},
-            {0x0C, "from bathroom"},
-            {0x0D, "from empty honeycomb room"},
-            {0x0E, "from the bedroom"},
-            {0x0E, "from music note room"},
-            {0x10, "from clock tower - top"},
-            {0x11, "from clock tower - bottom"},
             {0x12, "from mumbo's skull"},
             {0x13, "from the well - bottom"},
         }
@@ -378,11 +363,9 @@ static rando_scene_t RBB_scenes[14] = {
         0x31, 15,
         (rando_entrance_t[]){
             {0x10, "from gruntilda's lair"},
-            {0x01, "from captain quarters"},
-            {0x02, "from crew quarters"},
             {0x03, "from engine room - button room"},
             {0x04, "from kitchen"},
-            {0x04, "from navigation room"},
+            {0x05, "from navigation room"},
             {0x06, "from store room"},
             {0x07, "from engine room - gears room"},
             {0x08, "from boat house"},
@@ -402,7 +385,7 @@ static rando_scene_t RBB_scenes[14] = {
         }
     },
     { "boat house",
-        0x34, 1,
+        0x35, 1,
         (rando_entrance_t[]){
             {0x1, ""},
         }
