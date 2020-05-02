@@ -3,7 +3,7 @@
 #include "simptypes.h"
 
 #define WARP_FLAG_NONE          0
-#define WARP_FLAG_MM_OPEN       0x1 << 0x01
+#define WARP_FLAG_FIGHT         0x1 << 0x01
 #define WARP_FLAG_TTC_OPEN      0x1 << 0x02
 #define WARP_FLAG_CC_OPEN       0x1 << 0x04
 #define WARP_FLAG_BGS_OPEN      0x1 << 0x05
@@ -45,6 +45,7 @@
 #define WARP_FLAG_WINTER_OPEN   0x1 << 0x28
 
 
+
 //50, 180, 260, 350, 450, 640, 765, 810
 typedef struct exit{
     u8 map;
@@ -58,5 +59,9 @@ typedef struct warp{
     u64     soft_flags; //any MUST be satisfied
 } warp_t;
 
-extern const warp_t    vanilla_pairs[];
+extern warp_t     nodePool_available_init[153];
+extern warp_t     nodePool_unavailable_init[92];
+extern warp_t     tree_available_init[2];
+extern warp_t     tree_unavailable_init[4];
+//extern const warp_t    vanilla_pairs[];
 #endif

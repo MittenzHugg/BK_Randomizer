@@ -7,6 +7,7 @@
 #include "randoresource.h"
 #include "start.h"
 #include "sys.h"
+#include "warps.h"
 
 __attribute__((section(".data")))
 rando_ctxt_t rando = {
@@ -122,7 +123,7 @@ void init(void){
     menu_item_register_event(short_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_SHORT);
 
     rando.cwd_name = (char *) malloc(40);
-    //menu_label_add(main_menu, 0, 5,rando.cwd_name);
+    menu_label_add(main_menu, 0, 5,rando.cwd_name);
 
     if(mkdir("bk_rando", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)){
         rando.cwd_name = "could not make dir \"\\bk_rando\\\"";
