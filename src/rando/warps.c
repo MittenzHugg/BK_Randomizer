@@ -625,25 +625,21 @@ warp_t tree_unavailable_init[] ={
 
 void warp_mapping_init(void){
     nodePool_avail_len = 153;
-    //nodePool_avail = (warp_t**) malloc(245*sizeof(warp_t*));
     for(int i = 0; i < nodePool_avail_len; i++){
         nodePool_avail[i] = &(nodePool_available_init[i]);
     }
 
     nodePool_unavail_len = 92;
-    //nodePool_unavail = (warp_t**) malloc(nodePool_unavail_len*sizeof(warp_t*));
     for(int i = 0; i < nodePool_unavail_len; i++){
         nodePool_unavail[i] = &(nodePool_unavailable_init[i]);
     }
 
     tree_avail_len = 2;
-    //tree_avail = (warp_t**) malloc(tree_avail_len*sizeof(warp_t*));
     for(int i = 0; i < tree_avail_len; i++){
         tree_avail[i] = &(tree_available_init[i]);
     }
 
     tree_unavail_len = 4;
-    //tree_unavail = (warp_t**) malloc(tree_unavail_len*sizeof(warp_t*));
     for(int i = 0; i < tree_unavail_len; i++){
         tree_unavail[i] = &(tree_unavailable_init[i]);
     }
@@ -713,7 +709,6 @@ void warp_attachWarps(int pool_i, int tree_i){
             if(nodePool_avail[i]->me.map == map_index){
                 //increase tree_size
                 tree_avail_len++;
-                //tree_avail = (warp_t**) realloc(tree_avail, sizeof(warp_t*)*(++tree_avail_len));
                 //copy exit to tree
                 tree_avail[tree_avail_len-1] = nodePool_avail[i];
                 //remove from nodePool
@@ -728,7 +723,6 @@ void warp_attachWarps(int pool_i, int tree_i){
         if(nodePool_unavail[i]->me.map == map_index){
             //increase tree_size
             tree_unavail_len++;
-            //tree_unavail = (warp_t**) realloc(tree_unavail, sizeof(warp_t*)*(++tree_unavail_len));
             //copy exit to tree
             tree_unavail[tree_unavail_len-1] = nodePool_unavail[i];
             //remove from nodePool
@@ -1344,7 +1338,6 @@ void warp_update_availability(void){
                     || (curr_exit->soft_flags & achieved_flags))){
                 //increase nodePool_avail size
                 nodePool_avail_len++;
-                //nodePool_avail = (warp_t**) realloc(nodePool_avail, sizeof(warp_t*)*(nodePool_avail_len));
                 //copy exit to nodePool_avail
                 nodePool_avail[nodePool_avail_len-1] = curr_exit;
                 //remove from nodePool_unavail
@@ -1363,7 +1356,6 @@ void warp_update_availability(void){
                     || (curr_exit->soft_flags & achieved_flags))){
                 //increase tree_avail size
                 tree_avail_len++;
-                //tree_avail = (warp_t**) realloc(tree_avail, sizeof(warp_t*)*(++tree_avail_len));
                 //copy exit to tree_avail
                 tree_avail[tree_avail_len-1] = curr_exit;
                 //remove from tree_unavail
@@ -1438,11 +1430,41 @@ void wm_generate_mapping(u32 seed){
         D_PRINTF("FAIL: %3d: attaching {%02x,%02x}\n", nodePool_unavail_len, (*fail)->me.map, (*fail)->me.exit);
     }
    
+    achieved_flags |= 0xFFFFFFFFFFFFFFFF;
     achieved_flags |= WARP_FLAG_FIGHT; //TODO: PLACE THIS AT MAX HEIGHT NODE
     achieved_flags |= WARP_FLAG_INACCESSIBLE;
     achieved_flags |= WARP_FLAG_ONEWAY;
-
-
+    while(tree_unavail_len){
+        int rand1 = rand()%tree_avail_len;
+        exitLUT_set(&(tree_avail[rand1]->ret), &(tree_unavail[--tree_unavail_len]->me));
+        exitLUT_set(&(tree_unavail[tree_unavail_len]->ret), &(tree_avail[rand1]->me));
+        tree_avail[rand1] = tree_avail[--tree_avail_len];
+    }
+    //warp_update_availability();
+    D_PRINTF("POOL u=%3d a=%3d : TREE u=%3d a=%3d\n",
+            nodePool_unavail_len, nodePool_avail_len,
+            tree_unavail_len, tree_avail_len);
+    
+    while(tree_avail_len){
+        int rand1 = rand()%tree_avail_len;
+        int rand2 = rand()%tree_avail_len;
+        exitLUT_set(&(tree_avail[rand1]->ret), &(nodePool_avail[rand2]->me));
+        exitLUT_set(&(tree_avail[rand2]->ret), &(nodePool_avail[rand1]->me));
+        if (rand2 == tree_avail_len -1){ 
+            tree_avail_len--;
+            if(rand1 != rand2) tree_avail[rand1] = tree_avail[--tree_avail_len];
+        }
+        else if (rand1 == tree_avail_len -1){ 
+            tree_avail_len--;
+            if(rand1 != rand2) tree_avail[rand2] = tree_avail[--tree_avail_len];
+        }else{
+            tree_avail[rand1] = tree_avail[--tree_avail_len];
+            if(rand1 != rand2) tree_avail[rand2] = tree_avail[--tree_avail_len];
+        }
+        D_PRINTF("POOL u=%3d a=%3d : TREE u=%3d a=%3d\n",
+            nodePool_unavail_len, nodePool_avail_len,
+            tree_unavail_len, tree_avail_len);
+    }
     // TODO attach all one way and inaccessible nodes s.t.
         //{x,y},{a,b} INACCESSIBLE -> futher exits 
         //{x,y},{a,NULL} -> further exits

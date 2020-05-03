@@ -5,13 +5,21 @@
 #include "simptypes.h"
 #include "rando.h"
 
+bool warp_new_game = false;
+
 void warp_interceptor(uint32_t old_map, uint32_t old_exit, uint32_t transition_type){
     uint32_t new_map =  old_map;
     uint32_t new_exit =  old_exit;
     exit_t old = {(u8) old_map, (u8) old_exit};
 
     exitMap_t* mapping = exitLUT_get(&old);
-    if(mapping != NULL){
+
+    if (warp_new_game && (old_map == 0x01)){
+        warp_new_game = false;
+        bk_map_exit_no_reset_set(old_map, old_exit, transition_type);
+        return;     
+    }
+    else if(mapping != NULL){
         new_map = (uint32_t) mapping->new.map;
         new_exit = (uint32_t) mapping->new.exit;
     }
@@ -24,6 +32,7 @@ void warp_interceptor(uint32_t old_map, uint32_t old_exit, uint32_t transition_t
 
 void warp_generate_mapping(void){
     wm_generate_mapping(rando.current_seed);
+    warp_new_game = true;
     return;
 }
 
