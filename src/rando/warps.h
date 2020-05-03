@@ -1,5 +1,6 @@
 #ifndef _WARPS_H
 #define _WARPS_H
+#include <stdlib.h>
 #include "simptypes.h"
 
 #define WARP_FLAG_NONE          0
@@ -52,6 +53,11 @@ typedef struct exit{
     u8 exit;
 } exit_t;
 
+typedef struct exitMap{
+    exit_t old;
+    exit_t new;
+} exitMap_t;
+
 typedef struct warp{
     exit_t  me;
     exit_t  ret;
@@ -63,5 +69,13 @@ extern warp_t     nodePool_available_init[153];
 extern warp_t     nodePool_unavailable_init[92];
 extern warp_t     tree_available_init[2];
 extern warp_t     tree_unavailable_init[4];
+
+extern const u16 hash_table_len; //about 1.3x exit count
+extern exitMap_t exitLUT[337];
+
 //extern const warp_t    vanilla_pairs[];
+
+exitMap_t* exitLUT_get(exit_t* old);
+void wm_generate_mapping(u32 seed);
+
 #endif
