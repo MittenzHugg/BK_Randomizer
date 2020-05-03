@@ -9,10 +9,10 @@
 #endif
 
 const u16 hash_table_len = 337;
-extern exitMap_t exitLUT[337] = {0};
+exitMap_t exitLUT[337] = {0};
 
-static u64  achieved_flags = 0;
-static u32  tree_includes_map_flag = 0;
+u64  achieved_flags = 0;
+u32  tree_includes_map_flag = 0;
 #define TREE_MAP_TTC_TTC        1 << 1
 #define TREE_MAP_GV_GV          1 << 2
 #define TREE_MAP_CCW_HUB        1 << 3
@@ -38,17 +38,17 @@ static u32  tree_includes_map_flag = 0;
 #define TREE_MAP_CC_CC          1 << 23
 #define TREE_MAP_CC_INSIDE      1 << 24
 
-static u8   tree_jiggy_cnt = 0;
-static u8   tree_token_cnt = 0;
-static u16  tree_note_cnt = 0;
-static u32 nodePool_avail_len;
-static u32 nodePool_unavail_len;
-static u32 tree_avail_len;
-static u32 tree_unavail_len;
-static warp_t** nodePool_avail;
-static warp_t** nodePool_unavail;
-static warp_t** tree_avail;
-static warp_t** tree_unavail;
+u8   tree_jiggy_cnt = 0;
+u8   tree_token_cnt = 0;
+u16  tree_note_cnt = 0;
+unsigned int nodePool_avail_len;
+unsigned int nodePool_unavail_len;
+unsigned int tree_avail_len;
+unsigned int tree_unavail_len;
+warp_t* nodePool_avail[245];
+warp_t* nodePool_unavail[92];
+warp_t* tree_avail[251];
+warp_t* tree_unavail[96];
 
 bool warp_exits_match(exit_t* a, exit_t* b){
     return ((a->map == b->map) && (a->exit == b->exit));
@@ -625,25 +625,25 @@ warp_t tree_unavailable_init[] ={
 
 void warp_mapping_init(void){
     nodePool_avail_len = 153;
-    nodePool_avail = (warp_t**) malloc(nodePool_avail_len*sizeof(warp_t*));
+    //nodePool_avail = (warp_t**) malloc(245*sizeof(warp_t*));
     for(int i = 0; i < nodePool_avail_len; i++){
         nodePool_avail[i] = &(nodePool_available_init[i]);
     }
 
     nodePool_unavail_len = 92;
-    nodePool_unavail = (warp_t**) malloc(nodePool_unavail_len*sizeof(warp_t*));
+    //nodePool_unavail = (warp_t**) malloc(nodePool_unavail_len*sizeof(warp_t*));
     for(int i = 0; i < nodePool_unavail_len; i++){
         nodePool_unavail[i] = &(nodePool_unavailable_init[i]);
     }
 
     tree_avail_len = 2;
-    tree_avail = (warp_t**) malloc(tree_avail_len*sizeof(warp_t*));
+    //tree_avail = (warp_t**) malloc(tree_avail_len*sizeof(warp_t*));
     for(int i = 0; i < tree_avail_len; i++){
         tree_avail[i] = &(tree_available_init[i]);
     }
 
     tree_unavail_len = 4;
-    tree_unavail = (warp_t**) malloc(tree_unavail_len*sizeof(warp_t*));
+    //tree_unavail = (warp_t**) malloc(tree_unavail_len*sizeof(warp_t*));
     for(int i = 0; i < tree_unavail_len; i++){
         tree_unavail[i] = &(tree_unavailable_init[i]);
     }
@@ -655,60 +655,84 @@ void warp_mapping_init(void){
     tree_note_cnt  = 0;
 }
 
-warp_t** warp_nodePool_randSelect(void){
+int warp_nodePool_randSelect(void){
     u32 np_i;
     u32 tree_i;
     warp_t* selected_nodePool;
     warp_t* selected_exit;
     if(tree_avail_len == 1){
-        // TODO select poolnode with more than 1 available exit
-        //
-        return &nodePool_avail[rand()% nodePool_avail_len];
-        return NULL;
+        u32 start_indx = rand()% nodePool_avail_len;
+        u32 currCandidate = start_indx;
+        do{
+            for(int i = 0; i< nodePool_unavail_len; i++){
+                //find nodePool with more than 1 available exit
+                if((i != currCandidate) && (nodePool_avail[i]->me.map == nodePool_avail[currCandidate]->me.map)){
+                    return currCandidate;
+                }
+            }
+            currCandidate++;
+            currCandidate = currCandidate%nodePool_avail_len;
+        }
+        while (currCandidate -= start_indx);
+        return -1;
     }
     else{
-        return &nodePool_avail[rand()% nodePool_avail_len];
+        return rand()% nodePool_avail_len;
     }
 }
 
-void warp_attachWarps(warp_t** pool_node, warp_t** tree_node){
+void warp_attachWarps(int pool_i, int tree_i){
     //make connection
-    exitLUT_set(&((*tree_node)->ret), &((*pool_node)->me));
-    exitLUT_set(&((*pool_node)->ret), &((*tree_node)->me));
+    D_PRINTF("7.1\n");
+    exitLUT_set(&(tree_avail[tree_i]->ret), &(nodePool_avail[pool_i]->me));
+    D_PRINTF("7.2\n");
+    exitLUT_set(&(nodePool_avail[pool_i]->ret), &(tree_avail[tree_i]->me));
+    D_PRINTF("7.3\n");
 
-    u8 map_index = (*pool_node)->me.map;
-
+    u8 map_index = nodePool_avail[pool_i]->me.map;
     //delete nodePool warp
-    *pool_node = nodePool_avail[--nodePool_avail_len];
-    nodePool_avail = (warp_t**) realloc(nodePool_avail, sizeof(warp_t*)*nodePool_avail_len);
-    
-    //delete tree warp
-    *tree_node = tree_avail[--tree_avail_len];
-    tree_avail = (warp_t**) realloc(tree_avail, sizeof(warp_t*)*tree_avail_len);
+    D_PRINTF("7.4: %d , %d \n", pool_i, nodePool_avail_len-1);
+    for(int i = 0; i < nodePool_avail_len && i < 25; i++){
+        D_PRINTF("7.4.%2d: %d\n", i, nodePool_avail[i]);
+    }
+    if(nodePool_avail_len > 0){
+        nodePool_avail[pool_i] = nodePool_avail[nodePool_avail_len-1];
+        D_PRINTF("7.5\n");
+        nodePool_avail_len--;
+    }
 
+    D_PRINTF("7.6\n");
+
+    //delete tree warp
+    tree_avail[tree_i] = tree_avail[--tree_avail_len];
+    D_PRINTF("7.7\n");
+    
     //move available exits
-    for(int i = nodePool_avail_len-1; i >= 0; i--){
-        if(nodePool_avail[i]->me.map == map_index){
-            //increase tree_size
-            tree_avail = (warp_t**) realloc(tree_avail, sizeof(warp_t*)*(++tree_avail_len));
-            //copy exit to tree
-            tree_avail[tree_avail_len-1] = nodePool_avail[i];
-            //remove from nodePool
-            nodePool_avail[i] = nodePool_avail[--nodePool_avail_len];
-            nodePool_avail = (warp_t**) realloc(nodePool_avail, sizeof(warp_t*)*(nodePool_avail_len));
+    if(nodePool_avail_len != 0){
+        for(int i = nodePool_avail_len-1; i >= 0; i--){
+            if(nodePool_avail[i]->me.map == map_index){
+                //increase tree_size
+                tree_avail_len++;
+                //tree_avail = (warp_t**) realloc(tree_avail, sizeof(warp_t*)*(++tree_avail_len));
+                //copy exit to tree
+                tree_avail[tree_avail_len-1] = nodePool_avail[i];
+                //remove from nodePool
+                nodePool_avail[i] = nodePool_avail[--nodePool_avail_len];
+            }
         }
     }
 
     //move unavailable exits
+    if(nodePool_unavail_len == 0) return;
     for(int i = nodePool_unavail_len-1; i >= 0; i--){
         if(nodePool_unavail[i]->me.map == map_index){
             //increase tree_size
-            tree_unavail = (warp_t**) realloc(tree_unavail, sizeof(warp_t*)*(++tree_unavail_len));
+            tree_unavail_len++;
+            //tree_unavail = (warp_t**) realloc(tree_unavail, sizeof(warp_t*)*(++tree_unavail_len));
             //copy exit to tree
             tree_unavail[tree_unavail_len-1] = nodePool_unavail[i];
             //remove from nodePool
             nodePool_unavail[i] = nodePool_unavail[--nodePool_unavail_len];
-            nodePool_unavail = (warp_t**) realloc(nodePool_unavail, sizeof(warp_t*)*(nodePool_unavail_len));
         }
     }
     
@@ -1211,25 +1235,25 @@ void warp_update_flags(u8 imap){
     if(tree_note_cnt >= 50){
         achieved_flags |= WARP_FLAG_50_NOTES;
     }
-    else if(tree_note_cnt >= 180){
+    if(tree_note_cnt >= 180){
         achieved_flags |= WARP_FLAG_180_NOTES;
     }
-    else if(tree_note_cnt >= 260){
+    if(tree_note_cnt >= 260){
         achieved_flags |= WARP_FLAG_260_NOTES;
     }
-    else if(tree_note_cnt >= 350){
+    if(tree_note_cnt >= 350){
         achieved_flags |= WARP_FLAG_350_NOTES;
     }
-    else if(tree_note_cnt >= 450){
+    if(tree_note_cnt >= 450){
         achieved_flags |= WARP_FLAG_450_NOTES;
     }
-    else if(tree_note_cnt >= 640){
+    if(tree_note_cnt >= 640){
         achieved_flags |= WARP_FLAG_640_NOTES;
     }
-    else if(tree_note_cnt >= 765){
+    if(tree_note_cnt >= 765){
         achieved_flags |= WARP_FLAG_765_NOTES;
     }
-    else if(tree_note_cnt >= 810){
+    if(tree_note_cnt >= 810){
         achieved_flags |= WARP_FLAG_810_NOTES;
     }
 
@@ -1312,32 +1336,40 @@ void warp_update_flags(u8 imap){
 
 void warp_update_availability(void){
     //move unavailable nodePool exits
-    for(int i = nodePool_unavail_len-1; i >= 0; i--){
-        if(!(nodePool_unavail[i]->hard_flags & (~achieved_flags))
-            && ( (nodePool_unavail[i]->soft_flags == 0) 
-                || (nodePool_unavail[i]->soft_flags & achieved_flags))){
-            //increase nodePool_avail size
-            nodePool_avail = (warp_t**) realloc(nodePool_avail, sizeof(warp_t*)*(++nodePool_avail_len));
-            //copy exit to nodePool_avail
-            nodePool_avail[nodePool_avail_len-1] = nodePool_unavail[i];
-            //remove from nodePool_unavail
-            nodePool_unavail[i] = nodePool_unavail[--nodePool_unavail_len];
-            nodePool_unavail = (warp_t**) realloc(nodePool_unavail, sizeof(warp_t*)*(nodePool_unavail_len));
+    if(nodePool_unavail_len != 0 ){
+        for(int i = 0; i < nodePool_unavail_len; i++){
+            warp_t* curr_exit = nodePool_unavail[nodePool_unavail_len-1-i];
+            if(!(curr_exit->hard_flags & (~achieved_flags))
+                && ( (curr_exit->soft_flags == 0) 
+                    || (curr_exit->soft_flags & achieved_flags))){
+                //increase nodePool_avail size
+                nodePool_avail_len++;
+                //nodePool_avail = (warp_t**) realloc(nodePool_avail, sizeof(warp_t*)*(nodePool_avail_len));
+                //copy exit to nodePool_avail
+                nodePool_avail[nodePool_avail_len-1] = curr_exit;
+                //remove from nodePool_unavail
+                nodePool_unavail[nodePool_unavail_len-1-i] = nodePool_unavail[nodePool_unavail_len-1];
+                nodePool_unavail_len--;
+            }
         }
     }
 
     //move unavailable tree exits
-    for(int i = tree_unavail_len-1; i >= 0; i--){
-        if(!(tree_unavail[i]->hard_flags & (~achieved_flags))
-            && ( (tree_unavail[i]->soft_flags == 0) 
-                || (tree_unavail[i]->soft_flags & achieved_flags))){
-            //increase tree_avail size
-            tree_avail = (warp_t**) realloc(tree_avail, sizeof(warp_t*)*(++tree_avail_len));
-            //copy exit to tree_avail
-            tree_avail[tree_avail_len-1] = tree_unavail[i];
-            //remove from tree_unavail
-            tree_unavail[i] = tree_unavail[--tree_unavail_len];
-            tree_unavail = (warp_t**) realloc(tree_unavail, sizeof(warp_t*)*(tree_unavail_len));
+    if(tree_unavail_len != 0 ){
+        for(int i = 0; i < tree_unavail_len; i++){
+            warp_t* curr_exit = tree_unavail[tree_unavail_len-1-i];
+            if(!(curr_exit->hard_flags & (~achieved_flags))
+                && ( (curr_exit->soft_flags == 0) 
+                    || (curr_exit->soft_flags & achieved_flags))){
+                //increase tree_avail size
+                tree_avail_len++;
+                //tree_avail = (warp_t**) realloc(tree_avail, sizeof(warp_t*)*(++tree_avail_len));
+                //copy exit to tree_avail
+                tree_avail[tree_avail_len-1] = curr_exit;
+                //remove from tree_unavail
+                tree_unavail[tree_unavail_len-1-i] = tree_unavail[tree_unavail_len-1];
+                tree_unavail_len--;
+            }
         }
     }
 }
@@ -1346,37 +1378,66 @@ void wm_generate_mapping(u32 seed){
     exitLUT_clear();
     warp_mapping_init();
     srand(seed);
+    tree_note_cnt = 6;
 
-
-    int i = 0;
-    while (nodePool_avail_len != 1){// not all nodes in tree
-        //select exit from nodePool
-        warp_t** selected_exit =  warp_nodePool_randSelect();
-        //warp_t** selected_exit =  &nodePool_avail[1];
-        if(selected_exit == NULL){break;} //error: unable to select final nodes without softlocking breaking for now
-        u8 added_map = (*selected_exit)->me.map;
-
-        //select exit from tree
-        warp_t** selected_entrance = &tree_avail[rand()%tree_avail_len];
-        //warp_t** selected_entrance = &tree_avail[0];
-
-        //attach
-        D_PRINTF("%3d: attaching {%02x,%02x} <-> {%02x,%02x} : ", ++i,
-            (*selected_exit)->me.map, (*selected_exit)->me.exit,
-            (*selected_entrance)->me.map, (*selected_entrance)->me.exit);
-
-        warp_attachWarps(selected_exit, selected_entrance);
-
-        warp_update_flags(added_map);
-        warp_update_availability();
-
-         D_PRINTF("POOL u=%3d a=%3d : TREE u=%3d a=%3d\n",
+     D_PRINTF("POOL u=%3d a=%3d : TREE u=%3d a=%3d\n",
             nodePool_unavail_len, nodePool_avail_len,
             tree_unavail_len, tree_avail_len);
 
-    };
+    int i = 0;
+    while (nodePool_avail_len != 0){// not all nodes in tree
+        //select exit from nodePool
+         D_PRINTF("1\n");
+        int s_exit = warp_nodePool_randSelect();
+        D_PRINTF("2\n");
+        if(s_exit == -1){
+             while(nodePool_avail_len){
+                warp_t** fail = &nodePool_avail[--nodePool_avail_len];
+                D_PRINTF("FAIL_A: %3d: attaching {%02x,%02x}\n", nodePool_avail_len, (*fail)->me.map, (*fail)->me.exit);
+             }
+             while(nodePool_unavail_len){
+                warp_t** fail = &nodePool_unavail[--nodePool_unavail_len];
+                D_PRINTF("FAIL_U: %3d: attaching {%02x,%02x}\n", nodePool_unavail_len, (*fail)->me.map, (*fail)->me.exit);
+             }
+             break;
+        }
+        D_PRINTF("3\n");
+        warp_t* selected_exit =  nodePool_avail[s_exit];
+        D_PRINTF("4\n");
+         //error: unable to select final nodes without softlocking breaking for now
+        u8 added_map = (*selected_exit).me.map;
+        D_PRINTF("5\n");
+        //select exit from tree
+        int s_ent = rand()%tree_avail_len;
+        D_PRINTF("6\n");
+        warp_t* selected_entrance = tree_avail[s_ent];
+        D_PRINTF("7\n");
 
+        //attach
+        D_PRINTF("%3d: attaching {%02x,%02x} <-> {%02x,%02x} : ", ++i,
+            (*selected_exit).me.map, (*selected_exit).me.exit,
+            (*selected_entrance).me.map, (*selected_entrance).me.exit);
+
+        warp_attachWarps(s_exit, s_ent);
+        D_PRINTF("8\n");
+        warp_update_flags(added_map);
+        D_PRINTF("9\n");
+        warp_update_availability();
+        D_PRINTF("10\n");
+
+         D_PRINTF("POOL u=%3d a=%3d : TREE u=%3d a=%3d : %d\n",
+            nodePool_unavail_len, nodePool_avail_len,
+            tree_unavail_len, tree_avail_len,
+            i*2 + nodePool_unavail_len + nodePool_avail_len + tree_unavail_len + tree_avail_len);
+
+    };
+     D_PRINTF("Notes: %d, Jiggies %d, Tokens: %d\n", tree_note_cnt, tree_jiggy_cnt, tree_token_cnt);
     //make all unavailable nodes
+    while(nodePool_unavail_len){
+        warp_t** fail = &nodePool_unavail[--nodePool_unavail_len];
+        D_PRINTF("FAIL: %3d: attaching {%02x,%02x}\n", nodePool_unavail_len, (*fail)->me.map, (*fail)->me.exit);
+    }
+   
     achieved_flags |= WARP_FLAG_FIGHT; //TODO: PLACE THIS AT MAX HEIGHT NODE
     achieved_flags |= WARP_FLAG_INACCESSIBLE;
     achieved_flags |= WARP_FLAG_ONEWAY;
