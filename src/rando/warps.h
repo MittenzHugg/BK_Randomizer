@@ -3,49 +3,80 @@
 #include <stdlib.h>
 #include "simptypes.h"
 
-#define WARP_FLAG_NONE          0
-#define WARP_FLAG_FIGHT         0x1 << 0x01
-#define WARP_FLAG_TTC_OPEN      0x1 << 0x02
-#define WARP_FLAG_CC_OPEN       0x1 << 0x04
-#define WARP_FLAG_BGS_OPEN      0x1 << 0x05
-#define WARP_FLAG_FP_OPEN       0x1 << 0x06
-#define WARP_FLAG_MMM_OPEN      0x1 << 0x07
-#define WARP_FLAG_RBB_OPEN      0x1 << 0x08
-#define WARP_FLAG_CCW_OPEN      0x1 << 0x09
-#define WARP_FLAG_DOG_OPEN      0x1 << 0x0A
-#define WARP_FLAG_50_NOTES      0x1 << 0x0B
-#define WARP_FLAG_180_NOTES     0x1 << 0x0C
-#define WARP_FLAG_260_NOTES     0x1 << 0x0D
-#define WARP_FLAG_350_NOTES     0x1 << 0x0E
-#define WARP_FLAG_450_NOTES     0x1 << 0x0F
-#define WARP_FLAG_640_NOTES     0x1 << 0x10
-#define WARP_FLAG_765_NOTES     0x1 << 0x11
-#define WARP_FLAG_810_NOTES     0x1 << 0x12
-#define WARP_FLAG_TALON_TROT    0x1 << 0x13
-#define WARP_FLAG_BEAK_BUST     0x1 << 0x14
-#define WARP_FLAG_EGGS          0x1 << 0x14
-#define WARP_FLAG_SHOCK_SPRING  0x1 << 0x15
-#define WARP_FLAG_FLIGHT        0x1 << 0x16
-#define WARP_FLAG_WADING_BOOTS  0x1 << 0x17
-#define WARP_FLAG_BEAK_BOMB     0x1 << 0x18
-#define WARP_FLAG_TURBO_TALON   0x1 << 0x19
-#define WARP_FLAG_TERMITE       0x1 << 0x1A
-#define WARP_FLAG_CROC          0x1 << 0x1B
-#define WARP_FLAG_WALRUS        0x1 << 0x1C
-#define WARP_FLAG_PUMPKIN       0x1 << 0x1D
-#define WARP_FLAG_BEE           0x1 << 0x1E
-#define WARP_FLAG_INACCESSIBLE  0x1 << 0x1F
-#define WARP_FLAG_ONEWAY        0x1 << 0x20
-#define WARP_FLAG_GV_WATER      0x1 << 0x21
-#define WARP_FLAG_GV_OPEN       0x1 << 0x22
-#define WARP_FLAG_WATER_LVL2    0x1 << 0x23
-#define WARP_FLAG_WATER_LVL3    0x1 << 0x24
-#define WARP_FLAG_SPRING_OPEN   0x1 << 0x25
-#define WARP_FLAG_SUMMER_OPEN   0x1 << 0x26
-#define WARP_FLAG_AUTUMN_OPEN   0x1 << 0x27
-#define WARP_FLAG_WINTER_OPEN   0x1 << 0x28
+#define BIT(x)  (0x01 << x)
 
+typedef enum warp_flags_open{
+    WF_OPEN_MM      = 0,
+    WF_OPEN_TTC     = 1,
+    WF_OPEN_CC      = 2,
+    WF_OPEN_BGS     = 3,
+    WF_OPEN_FP      = 4,
+    WF_OPEN_GV      = 5,
+    WF_OPEN_MMM     = 6,
+    WF_OPEN_RBB     = 7,
+    WF_OPEN_CCW     = 8,
+    WF_OPEN_SPRING  = 9,
+    WF_OPEN_SUMMER  = 10,
+    WF_OPEN_AUTUMN  = 11,
+    WF_OPEN_WINTER  = 12,
+    WF_OPEN_DOG     = 13,
+} warp_flags_open_e;
 
+typedef enum warp_flags_note{
+    WF_50_NOTES     = 0,
+    WF_180_NOTES    = 1,
+    WF_260_NOTES    = 2,
+    WF_350_NOTES    = 3,
+    WF_450_NOTES    = 4,
+    WF_640_NOTES    = 5,
+    WF_765_NOTES    = 6,
+    WF_810_NOTES    = 7,
+}warp_flags_note_e;
+
+typedef enum warp_flags_move{
+    WF_TALON_TROT   = 0,
+    WF_BEAK_BUST    = 1,
+    WF_EGGS         = 2,
+    WF_FLIGHT       = 3,
+    WF_SHOCK_SPRING = 4,
+    WF_WADING_BOOTS = 5,
+    WF_BEAK_BOMB    = 6,
+    WF_TURBO_TALON  = 7,
+}warp_flags_move_e;
+
+#define WF_TRANS_ANY 0x1F
+typedef enum warp_flag_tranformations{
+    WF_TRANS_TERMITE   = 0X00,
+    WF_TRANS_PUMPKIN   = 0X01,
+    WF_TRANS_WALRUS    = 0X02,
+    WF_TRANS_CROC      = 0X03,
+    WF_TRANS_BEE       = 0X04,
+} warp_flag_tranformations_e;
+
+typedef enum warp_flag_misc{
+    WF_INACCESSIBLE     = 0x00,
+    WF_ONEWAY_OUT       = 0X01,
+    WF_ONEWAY_IN        = 0X02,
+    WF_GV_WATER         = 0X03,
+    WF_WATER_LVL2    = 0X04,
+    WF_WATER_LVL3    = 0X05,
+    WF_FIGHT         = 0x06,
+} warp_flag_misc_e;
+
+#define WF_HARD_NONE 0,0,0
+#define WF_SOFT_NONE 0,0,0
+
+typedef struct warp_hard_flags_struct{
+    u16 level_open;
+    u8  note_door;
+    u8  moves;
+}warp_hard_flags_t;
+
+typedef struct warp_soft_flags_struct{
+    u8  moves;
+    u8  transform;
+    u8  misc;
+}warp_soft_flags_t;
 
 //50, 180, 260, 350, 450, 640, 765, 810
 typedef struct exit{
@@ -61,14 +92,24 @@ typedef struct exitMap{
 typedef struct warp{
     exit_t  me;
     exit_t  ret;
-    u64     hard_flags; //all MUST be satisfied
-    u64     soft_flags; //any MUST be satisfied
+    warp_hard_flags_t     hard_flags; //all MUST be satisfied
+    warp_soft_flags_t     soft_flags; //any MUST be satisfied
 } warp_t;
 
-extern warp_t     nodePool_available_init[153];
-extern warp_t     nodePool_unavailable_init[92];
-extern warp_t     tree_available_init[2];
-extern warp_t     tree_unavailable_init[4];
+typedef struct warp_pool{
+    u32 len;
+    warp_t* pool[256];
+}warp_pool_t;
+
+#define NODEPOOL_A_INIT_SIZE 154
+#define NODEPOOL_U_INIT_SIZE 90
+#define TREE_A_INIT_SIZE 2
+#define TREE_U_INIT_SIZE 4
+
+extern warp_t     nodePool_available_init[NODEPOOL_A_INIT_SIZE];
+extern warp_t     nodePool_unavailable_init[NODEPOOL_U_INIT_SIZE];
+extern warp_t     tree_available_init[TREE_A_INIT_SIZE];
+extern warp_t     tree_unavailable_init[TREE_U_INIT_SIZE];
 
 extern const u16 hash_table_len; //about 1.3x exit count
 extern exitMap_t exitLUT[337];

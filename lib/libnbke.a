@@ -104,3 +104,8 @@ bk_item_present_b_reset_hook = 0x80346594;
 bk_item_present_r_reset_hook = 0x80346598; 
 
 bk_item_catepillar_reset_hook = 0x803465a0;
+
+bk_cutscene_map = 0x80367694;
+
+bk_main_map = 0x8037d1e0;
+bk_main_exit = 0x8037d1e4;

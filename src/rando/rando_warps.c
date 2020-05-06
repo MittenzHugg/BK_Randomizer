@@ -5,34 +5,38 @@
 #include "simptypes.h"
 #include "rando.h"
 
-bool warp_new_game = false;
 
 void warp_interceptor(uint32_t old_map, uint32_t old_exit, uint32_t transition_type){
     uint32_t new_map =  old_map;
     uint32_t new_exit =  old_exit;
     exit_t old = {(u8) old_map, (u8) old_exit};
 
-    exitMap_t* mapping = exitLUT_get(&old);
-
-    if (warp_new_game && (old_map == 0x01)){
-        warp_new_game = false;
+    if (!bk_moves_unlocked_get(bk_moves_bearPunch)){
         bk_map_exit_no_reset_set(old_map, old_exit, transition_type);
         return;     
     }
-    else if(mapping != NULL){
+    if(bk_cutscene_map){
+        bk_map_exit_no_reset_set(old_map, old_exit, 1);
+        return; 
+    }
+    if(old_map == bk_main_map && old_exit == bk_main_exit){
+        bk_map_exit_no_reset_set(old_map, old_exit, 1);
+        return; 
+    }
+
+    exitMap_t* mapping = exitLUT_get(&old);
+    if(mapping != NULL){
         new_map = (uint32_t) mapping->new.map;
         new_exit = (uint32_t) mapping->new.exit;
     }
 
-    bk_map_exit_no_reset_set(new_map, new_exit, transition_type);
+    bk_map_exit_no_reset_set(new_map, new_exit, 1);
     return;
 }
 
 
-
 void warp_generate_mapping(void){
     wm_generate_mapping(rando.current_seed);
-    warp_new_game = true;
     return;
 }
 

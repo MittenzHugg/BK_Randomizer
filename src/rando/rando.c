@@ -70,6 +70,7 @@ static int rando_seed_update(event_handler_t *handler, menu_event_t event, void 
     uint32_t value = (uint32_t)*event_data;
     menu_number_set(handler->subscriber, value);
     rando.seed[rando.current_file] = value;
+    rando.current_seed = value;
     return 1;
 }
 

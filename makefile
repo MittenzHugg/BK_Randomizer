@@ -32,12 +32,14 @@ RANDO-NBKE11		= $(OBJ-rando-NBKE11) $(ELF-rando-NBKE11)
 RANDO-NBKP			= $(OBJ-rando-NBKP) $(ELF-rando-NBKP)
 
 debug_warp           : src/rando/warp_debug.c src/rando/warps.c
-	gcc -DDEBUG -o build/debug_warp src/rando/warp_debug.c src/rando/warps.c
+	gcc -DDEBUG -o build/debug_warp src/rando/warp_debug.c src/rando/warps.c src/rando/tree.c src/rando/bitfield.c
 
+debug_clean     :
+	rm -rf debug_warp build/debug_warp
 
 all	            : $(RANDO)
 clean           :
-	rm -rf $(OBJDIR) $(BINDIR) debug_warp build/debug_warp
+	rm -rf $(OBJDIR) $(BINDIR)
 
 distclean       : clean
 	rm -rf build/*.z64 build/*.wad
