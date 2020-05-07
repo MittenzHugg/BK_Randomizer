@@ -128,11 +128,12 @@ void exitLUT_clear(void){
     }
 }
 
+
 warp_t nodePool_available_init[] ={
     //MM,mm
     {{0x02,0x01}, {0x0E,0x01}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //MM,mm <- MM,mm_mumbos
     {{0x02,0x02}, {0x0C,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //MM,mm <- MM,mm_tickers_lower
-    {{0x02,0x04}, {0x69,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //MM,mm <- lair,mm_lobby
+    {{0x02,0x05}, {0x69,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //MM,mm <- lair,mm_lobby
 
     //TTC,blubber_ship
     {{0x05, 0x05}, {0x07,0x06}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //TTC,blubber_ship_top <- TTC,ttc
@@ -149,7 +150,7 @@ warp_t nodePool_available_init[] ={
 
     //TTC, sandcastle
     {{0x0A, 0x01}, {0x07,0x03}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //TTC,sandcastle <- TTC,ttc
-
+    
     //CC, cc
     {{0x0B, 0x03}, {0x22,0x05}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CC,cc <- CC,inside_left_gil
     {{0x0B, 0x04}, {0x22,0x04}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CC,cc <- CC,inside_right_gil
@@ -157,7 +158,7 @@ warp_t nodePool_available_init[] ={
 
     //MM,mm_tickers
     {{0x0C,0x02}, {0x02,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}},     //MM,mm_tickers_lower <- MM,mm 
-
+    
     //BGS, bgs
     {{0x0D,0x02}, {0x72,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}},     //BGS,bgs <- lair,bgs_lobby
 
@@ -349,7 +350,7 @@ warp_t nodePool_available_init[] ={
 
     //CCW,zubbas
     {{0x5B,0x02}, {0x44,0x06}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,su_zubbas <- CCW,summmer
-    {{0x5C,0x01}, {0x45,0x05}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,au_zubbas <- CCW,autumn
+    {{0x5C,0x02}, {0x45,0x05}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,au_zubbas <- CCW,autumn
 
     //CCW,sp_nabuts
     {{0x5E,0x01}, {0x43,0x07}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,door <- CCW,spring
@@ -361,7 +362,6 @@ warp_t nodePool_available_init[] ={
     {{0x60,0x01}, {0x45,0x07}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,door <- CCW,summer
     {{0x60,0x02}, {0x45,0x04}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,window <- CCW,summer
     //CCW,wi_nabuts
-    {{0x61,0x01}, {0x46,0x07}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,door <- CCW,summer
     {{0x61,0x02}, {0x46,0x04}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,window <- CCW,summer
 
     //CCW,wi_nabnut_hoard
@@ -383,7 +383,7 @@ warp_t nodePool_available_init[] ={
     {{0x68,0x01}, {0x46,0x08}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //CCW,autumn <- CCW,au_top_room
 
     //lair,mm_lobby
-    {{0x69,0x02}, {0x02,0x04}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,mm_lobby <- MM,mm 
+    {{0x69,0x02}, {0x02,0x05}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,mm_lobby <- MM,mm 
     {{0x69,0x12}, {0x01,0x13}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,mm_loby <- SM,sm
 
     //lair, ttc_cc_puzzles
@@ -421,11 +421,11 @@ warp_t nodePool_available_init[] ={
     {{0x72,0x01}, {0x71,0x03}, {WF_HARD_NONE}, {WF_SOFT_NONE}},//bgs_lobby <- 260_nd 
 
     //lair,gv_puzzle
-    {{0x74,0x01}, {0x6F,0x05}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,gv_puzzle <- lair,fp_lobby
-    {{0x74,0x02}, {0x75,0x01}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,gv_puzzle <- lair,mmm_lobby
+    {{0x74,0x02}, {0x6F,0x05}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,gv_puzzle <- lair,fp_lobby
+    {{0x74,0x01}, {0x75,0x01}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,gv_puzzle <- lair,mmm_lobby
 
     //lair,mmm_lobby
-    {{0x75,0x01}, {0x74,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,gv_puzzle <- lair,mmm_lobby
+    {{0x75,0x01}, {0x74,0x01}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,gv_puzzle <- lair,mmm_lobby
 
     //lair, 640_nd
     {{0x76,0x01}, {0x6F,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, 640_nd <- lair,fp_lobby
@@ -433,11 +433,11 @@ warp_t nodePool_available_init[] ={
 
     //lair,rbb_lobby
     {{0x77,0x01}, {0x76,0x04}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, 640_nd <- lair,rbb_lobby
-    {{0x77,0x04}, {0x78,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,rbb_lobby <- RBB,rbb_puzzle_mmm
+    {{0x77,0x04}, {0x78,0x01}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,rbb_lobby <- RBB,rbb_puzzle_mmm
 
     //rbb_mmm_puzzles
     //CHANCE TO SOFTLOCK (ALWAYS DESPAWN GRATE)
-    {{0x78,0x02}, {0x77,0x04}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,rbb_lobby <- RBB,rbb_puzzle_mmm
+    {{0x78,0x02}, {0x77,0x03}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair,rbb_lobby <- RBB,rbb_puzzle_mmm
 
     //lair,ccw_lobby
     {{0x79,0x01}, {0x76,0x03}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, ccw_lobby <- lair, 640_nd
@@ -451,7 +451,7 @@ warp_t nodePool_available_init[] ={
     
     //lair,ff_lobby
     {{0x80,0x01}, {0x79,0x03}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, 640_nd_upper <- lair,ff_lobby
-    {{0x80,0x02}, {0x8E,0x01}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, 640_nd_upper <- lair,ff_lobby
+    {{0x80,0x02}, {0x8E,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, 640_nd_upper <- lair,ff_lobby
 
     //RBB,anchor_room
     {{0x8B,0x04}, {0x31,0x13}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //RBB,anchor_room <- RBB,rbb
@@ -460,7 +460,7 @@ warp_t nodePool_available_init[] ={
     {{0x8C,0x01},{0x01,0x12}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //SM,banjo_house <- SM,sm 
 
     //FF
-    {{0x8E,0x01}, {0x80,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, ff <- lair,ff_lobby
+    {{0x8E,0x02}, {0x80,0x02}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, ff <- lair,ff_lobby
     {{0x8E,0x05}, {0x93,0x05}, {WF_HARD_NONE}, {WF_SOFT_NONE}}, //lair, ff <- lair,810_nd
     //yellow_cauldron
 };
@@ -479,10 +479,10 @@ warp_t nodePool_unavailable_init[] ={
     //CC, cc
     {{0x0B, 0x01}, {0x22,0x07}, {WF_HARD_NONE}, {BIT(WF_EGGS), 0, 0}}, //CC,cc <- CC,inside_left_tooth
     {{0x0B, 0x02}, {0x22,0x06}, {WF_HARD_NONE}, {BIT(WF_EGGS), 0, 0}}, //CC,cc <- CC,inside_right_tooth
-    {{0x0B, NULL}, {0x21,0x01}, {WF_HARD_NONE}, {0,            0, BIT(WF_ONEWAY_OUT)}}, ////CC,witch_switch_room <- CC,cc
+    {{0x0B, NULL}, {0x21,0x01}, {WF_HARD_NONE}, {0, 0, BIT(WF_ONEWAY_OUT)}}, ////CC,witch_switch_room <- CC,cc
 
     //MM,mm_tickers
-    {{0x0C,0x01}, {0x02,0x03}, 0, {WF_HARD_NONE}, {BIT(WF_BEAK_BUST), 0, 0}},  //MM,mm_tickers_upper <- MM,mm 
+    {{0x0C,0x01}, {0x02,0x03}, 0, {WF_HARD_NONE}, {0, BIT(WF_TRANS_ANY), 0}},  //MM,mm_tickers_upper <- MM,mm 
 
     //BGS, bgs
     {{0x0D,0x03}, {0x11,0x01}, {WF_HARD_NONE}, {BIT(WF_BEAK_BUST),   0, 0}},     //BGS,bgs <- BGS,tanktup
@@ -525,7 +525,7 @@ warp_t nodePool_unavailable_init[] ={
     {{0x22,0x06}, {0x0B,0x02}, {WF_HARD_NONE}, {0, 0, BIT(WF_INACCESSIBLE)}}, //CC,inside_right_tooth    <- CC,cc
     {{0x22,0x07}, {0x0B,0x01}, {WF_HARD_NONE}, {0, 0, BIT(WF_INACCESSIBLE)}}, //CC,inside_left_tooth     <- CC,cc
 
-    //MMM,well_top
+    //MMM,well
     {{0x25,0x04}, {0x1B,0x13}, {WF_HARD_NONE}, {0, BIT(WF_TRANS_PUMPKIN), 0}}, //MMM,well_bottom <- MMM,mmm
 
     //MMM,dining_room
@@ -568,8 +568,8 @@ warp_t nodePool_unavailable_init[] ={
 
     //CCW_AUTUMN
     {{0x45,0x04}, {0x60,0x02}, {WF_HARD_NONE}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_nabnuts_window
-    {{0x45,0x05}, {0x5C,0x01}, {0,0,BIT(WF_BEAK_BUST)}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_zubbas
-    {{0x45,0x06}, {0x63,0x02}, {WF_HARD_NONE}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_flooded_room
+    {{0x45,0x05}, {0x5C,0x02}, {0,0,BIT(WF_BEAK_BUST)}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_zubbas
+    {{0x45,0x06}, {0x63,0x01}, {WF_HARD_NONE}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_flooded_room
     {{0x45,0x07}, {0x60,0x01}, {WF_HARD_NONE}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_nabnuts_door
     {{0x45,0x08}, {0x67,0x01}, {WF_HARD_NONE}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_top_room
 
@@ -577,6 +577,7 @@ warp_t nodePool_unavailable_init[] ={
     {{0x46,0x04}, {0x61,0x02}, {WF_HARD_NONE}, {BIT(WF_TALON_TROT) | BIT(WF_FLIGHT), 0, 0}}, //CCW,spring <- CCW,au_nabnuts_window
     {{0x46,0x05}, {0x64,0x01}, {0,0,BIT(WF_BEAK_BUST)}, {BIT(WF_TALON_TROT) | BIT(WF_SHOCK_SPRING), 0, 0}}, //CCW,spring <- CCW,au_zubbas
     {{0x46,0x06}, {0x62,0x01}, {WF_HARD_NONE}, {BIT(WF_FLIGHT), 0, 0}}, //CCW,spring <- CCW,au_flooded_room
+    {{0x46,0x08}, {0x68,0x01}, {WF_HARD_NONE}, {BIT(WF_TALON_TROT) | BIT(WF_FLIGHT), 0, 0}}, //CCW,winter <- CCW,au_top_room
 
     //CCW,zubbas
     {{0x5A,0x01}, {0x43,0x06}, {WF_HARD_NONE}, {0, BIT(WF_TRANS_BEE), 0}}, //CCW,sp_zubbas <- CCW,spring
@@ -596,7 +597,7 @@ warp_t nodePool_unavailable_init[] ={
 
     //lair, fp_lobby
     {{0x6F,0x02}, {0x76,0x01}, {0,BIT(WF_450_NOTES),0},{WF_SOFT_NONE}},    //lair,fp_lobby <- lair, 640_nd
-    {{0x6F,0x05}, {0x73,0x02}, {0,BIT(WF_350_NOTES),0},{WF_SOFT_NONE}},    //lair,fp_lobby <- lair, gv_puzzle
+    {{0x6F,0x05}, {0x73,0x01}, {0,BIT(WF_350_NOTES),0},{WF_SOFT_NONE}},    //lair,fp_lobby <- lair, gv_puzzle
     {{0x6F,0x06}, {0x27,0x01}, {BIT(WF_OPEN_FP), 0, 0},{WF_SOFT_NONE}},    //lair,fp_lobby <- FP,fp
     
     //lair,cc_lobby
@@ -619,11 +620,11 @@ warp_t nodePool_unavailable_init[] ={
 
     //lair,rbb_lobby
     {{0x77,0x02}, {0x31,0x10}, {BIT(WF_OPEN_RBB), 0, 0}, {0, 0, BIT(WF_WATER_LVL2)}}, //lair,rbb_lobby <- RBB,rbb
-    {{0x77,0x03}, {0x78,0x01}, {WF_HARD_NONE}, {0, 0, BIT(WF_WATER_LVL3)}}, //lair,rbb_lobby <- RBB,rbb_puzzle_upper
+    {{0x77,0x03}, {0x78,0x02}, {WF_HARD_NONE}, {0, 0, BIT(WF_WATER_LVL3)}}, //lair,rbb_lobby <- RBB,rbb_puzzle_upper
 
     //rbb_mmm_puzzles
     //CHANCE TO SOFTLOCK (ALWAYS DESPAWN GRATE)
-    {{0x78,0x01}, {0x77,0x03}, {WF_HARD_NONE}, {0, 0, BIT(WF_WATER_LVL2)}}, //lair,rbb_lobby <- RBB,rbb_puzzle_rbb
+    {{0x78,0x01}, {0x77,0x04}, {WF_HARD_NONE}, {0, 0, BIT(WF_WATER_LVL2)}}, //lair,rbb_lobby <- RBB,rbb_puzzle_rbb
 
     //lair,ccw_lobby
     {{0x79,0x03}, {0x80,0x01}, {0, BIT(WF_765_NOTES), 0},{WF_SOFT_NONE}}, //lair,ccw_lobby <- lair,ff_lobby
@@ -792,21 +793,21 @@ static bool _warp_soft_flags_met(warp_soft_flags_t* req_flags, warp_soft_flags_t
 
 void warp_update_availability(void){
     //move unavailable nodePool exits
-    if(nodePool_u.len != 0 ){
-        for(int i = 0; i < nodePool_u.len; i++){
-            warp_t* curr_exit = nodePool_u.pool[nodePool_u.len-1-i];
-            if(_warp_hard_flags_met(&curr_exit->hard_flags, &banjo_tree->hard_f)
-            && _warp_soft_flags_met(&curr_exit->soft_flags, &banjo_tree->soft_f)){
-                //increase nodePool_a.pool size
-                nodePool_a.len++;
-                //copy exit to nodePool_a.pool
-                nodePool_a.pool[nodePool_a.len-1] = curr_exit;
-                //remove from nodePool_u.pool
-                nodePool_u.pool[nodePool_u.len-1-i] = nodePool_u.pool[nodePool_u.len-1];
-                nodePool_u.len--;
-            }
-        }
-    }
+    // if(nodePool_u.len != 0 ){
+    //     for(int i = 0; i < nodePool_u.len; i++){
+    //         warp_t* curr_exit = nodePool_u.pool[nodePool_u.len-1-i];
+    //         if(_warp_hard_flags_met(&curr_exit->hard_flags, &banjo_tree->hard_f)
+    //         && _warp_soft_flags_met(&curr_exit->soft_flags, &banjo_tree->soft_f)){
+    //             //increase nodePool_a.pool size
+    //             nodePool_a.len++;
+    //             //copy exit to nodePool_a.pool
+    //             nodePool_a.pool[nodePool_a.len-1] = curr_exit;
+    //             //remove from nodePool_u.pool
+    //             nodePool_u.pool[nodePool_u.len-1-i] = nodePool_u.pool[nodePool_u.len-1];
+    //             nodePool_u.len--;
+    //         }
+    //     }
+    // }
 
     //move unavailable tree exits
     if(tree_u.len != 0 ){
@@ -868,11 +869,6 @@ void wm_generate_mapping(u32 seed){
         warp_attachWarps(s_exit, s_ent);
         tree_attach_exit(banjo_tree, selected_entrance, selected_exit);
         warp_update_availability();
-
-         D_PRINTF("    POOL u=%3d a=%3d : TREE u=%3d a=%3d : %d\n",
-            nodePool_u.len, nodePool_a.len,
-            tree_u.len, tree_a.len,
-            i*2 + nodePool_u.len + nodePool_a.len + tree_u.len + tree_a.len);
     };
      D_PRINTF("Notes: %d, Jiggies %d, Tokens: %d\n", banjo_tree->note_count, bitfield_get_count(banjo_tree->jiggies), banjo_tree->token_count);
     //make all unavailable nodes
@@ -911,7 +907,7 @@ void wm_generate_mapping(u32 seed){
     //make connection
     exitLUT_set(&(tree_a.pool[selected_indx]->ret), &(tree_u.pool[fight_indx]->me));
     exitLUT_set(&(tree_u.pool[fight_indx]->ret), &(tree_a.pool[selected_indx]->me));
-    tree_attach_exit(banjo_tree, &(tree_u.pool[fight_indx]->me), &(tree_u.pool[fight_indx]->me));
+    tree_attach_exit(banjo_tree, &(tree_a.pool[selected_indx]->me), &(tree_u.pool[fight_indx]->me));
     //delete fight warp
     tree_u.pool[fight_indx] = tree_u.pool[tree_u.len--];
     //delete tree warp
@@ -931,7 +927,7 @@ void wm_generate_mapping(u32 seed){
             s_ent, tree_a.pool[s_ent]->me.map,  tree_a.pool[s_ent]->me.exit);
     //make connection
     exitLUT_set(&(tree_a.pool[s_ent]->ret), &(tree_u.pool[s_exit]->me));
-    tree_attach_exit(banjo_tree, &(tree_u.pool[s_ent]->me), &(tree_u.pool[s_exit]->me));
+    tree_attach_exit(banjo_tree, &(tree_a.pool[s_ent]->me), &(tree_u.pool[s_exit]->me));
     //delete exits
     tree_u.pool[s_exit] = tree_u.pool[--tree_u.len];
     tree_a.pool[s_ent] = tree_a.pool[--tree_a.len];

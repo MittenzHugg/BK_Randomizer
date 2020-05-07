@@ -101,7 +101,7 @@ typedef struct warp_pool{
     warp_t* pool[256];
 }warp_pool_t;
 
-#define NODEPOOL_A_INIT_SIZE 154
+#define NODEPOOL_A_INIT_SIZE 153
 #define NODEPOOL_U_INIT_SIZE 90
 #define TREE_A_INIT_SIZE 2
 #define TREE_U_INIT_SIZE 4
