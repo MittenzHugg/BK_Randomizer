@@ -31,6 +31,12 @@ RANDO-NBKE			= $(OBJ-rando-NBKE) $(ELF-rando-NBKE)
 RANDO-NBKE11		= $(OBJ-rando-NBKE11) $(ELF-rando-NBKE11)
 RANDO-NBKP			= $(OBJ-rando-NBKP) $(ELF-rando-NBKP)
 
+debug_warp           : src/rando/warp_debug.c src/rando/warps.c
+	gcc -DDEBUG -o build/debug_warp src/rando/warp_debug.c src/rando/warps.c src/rando/tree.c src/rando/bitfield.c
+
+debug_clean     :
+	rm -rf debug_warp build/debug_warp
+
 all	            : $(RANDO)
 clean           :
 	rm -rf $(OBJDIR) $(BINDIR)
@@ -54,6 +60,8 @@ libum           : libundermine/config.status
 	cd libundermine && make lib/libundermine-f3dex/libundermine-f3dex.a
 
 .PHONY          : all clean distclean clean-libum distclean-libum config-libum libum
+
+
 
 define bin_template
 SRCDIR-$(1)	    = $(5)

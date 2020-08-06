@@ -1,65 +1,50 @@
+/*************************************************************************
+*   Copyright (C) 2020 Michael (Mittenz) Salino-Hugg
+*   Contact: Twitter: @MittenzPhD
+**************************************************************************
+*	rando_warps.c
+*
+*   This file is part of BK_Randomizer.
+*
+*   BK_Randomizer is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   BK_Randomizer is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with BK_Randomizer.  If not, see <https://www.gnu.org/licenses/>.
+*************************************************************************/
+
 #include <stdint.h>
 #include "bk.h"
 #include "sys.h"
 #include "warps.h"
 #include "simptypes.h"
+#include "rando.h"
 
-typedef struct exitMap{
-    exit_t old;
-    exit_t new;
-} exitMap_t;
-
-const u16 hash_table_len = 337; //about 1.3x exit count
-
-static exitMap_t exitLUT[337] = {0};
-
-bool warp_exits_match(exit_t* a, exit_t* b){
-    return ((a->map == b->map) && (a->exit == b->exit));
-}
-
-u16 warp_exit_hash(exit_t* a){
-    u16 hash_seed = (((u16) a->exit) << 8) | ((u16)a->map);
-    return hash_seed%hash_table_len;
-}
-
-exitMap_t* exitLUT_get(exit_t* old){
-    exitMap_t* ret_val;
-    u16 i = warp_exit_hash(old);
-    do{
-        ret_val = &exitLUT[i];
-        if(ret_val->old.map == 0)
-            return NULL;
-        i++;
-    }while (!warp_exits_match(old, &(ret_val->old)));
-    return ret_val;
-}
-
-void exitLUT_set(exit_t* old, exit_t* new){
-    exitMap_t* ret_val;
-    u16 i = warp_exit_hash(old);
-    do{
-        ret_val = &exitLUT[i];
-         if(ret_val->old.map == 0){
-            ret_val->old = *old;
-            ret_val->new = *new;
-            return;
-         }
-            
-        i++;
-    }while (true);
-}
-
-void exitLUT_clear(void){
-    exitMap_t null_exit = {{0,0}, {0,0}};
-    for(int i = 0; i<hash_table_len; i++){
-        exitLUT[i] = null_exit;
-    }
-}
 
 void warp_interceptor(uint32_t old_map, uint32_t old_exit, uint32_t transition_type){
     uint32_t new_map =  old_map;
     uint32_t new_exit =  old_exit;
     exit_t old = {(u8) old_map, (u8) old_exit};
+
+    if (!bk_moves_unlocked_get(bk_moves_bearPunch)){
+        bk_map_exit_no_reset_set(old_map, old_exit, transition_type);
+        return;     
+    }
+    if(bk_cutscene_map){
+        bk_map_exit_no_reset_set(old_map, old_exit, 1);
+        return; 
+    }
+    if(old_map == bk_main_map && old_exit == bk_main_exit){
+        bk_map_exit_no_reset_set(old_map, old_exit, 1);
+        return; 
+    }
 
     exitMap_t* mapping = exitLUT_get(&old);
     if(mapping != NULL){
@@ -67,24 +52,13 @@ void warp_interceptor(uint32_t old_map, uint32_t old_exit, uint32_t transition_t
         new_exit = (uint32_t) mapping->new.exit;
     }
 
-    bk_map_exit_no_reset_set(new_map, new_exit, transition_type);
+    bk_map_exit_no_reset_set(new_map, new_exit, 1);
     return;
 }
 
+
 void warp_generate_mapping(void){
-    exitLUT_clear();
-    // reinit random seed
-
-    // TODO generate Loadzone Mapping
-    exit_t test_old = {0x01,0x13}; //exit gr_lair to sm
-    exit_t test_new = {0x43,0x08}; //warps to ccw_spring_top
-    exitLUT_set(&test_old, &test_new);
-
-
-    test_new = (exit_t) {0x69,0x12}; //exit to ccw_spring to top_room 
-    test_old = (exit_t) {0x65,0x01}; //warps to gr_lair
-    exitLUT_set(&test_old, &test_new);
-
+    wm_generate_mapping(rando.current_seed);
     return;
 }
 

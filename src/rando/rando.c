@@ -1,3 +1,25 @@
+/*************************************************************************
+*   Copyright (C) 2020 Michael (Mittenz) Salino-Hugg
+*   Contact: Twitter: @MittenzPhD
+**************************************************************************
+*	rando.c
+*
+*   This file is part of BK_Randomizer.
+*
+*   BK_Randomizer is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   BK_Randomizer is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with BK_Randomizer.  If not, see <https://www.gnu.org/licenses/>.
+*************************************************************************/
+
 #include <startup.h>
 #include <stdlib.h>
 #include <libundermine.h>
@@ -7,6 +29,7 @@
 #include "randoresource.h"
 #include "start.h"
 #include "sys.h"
+#include "warps.h"
 
 __attribute__((section(".data")))
 rando_ctxt_t rando = {
@@ -61,6 +84,7 @@ void rando_main(void){
     }
     else if (bk_game_mode_get() == BK_GAME_MODE_PAUSED){
         menu_t *pause_menu = &rando.pause_menu;
+        menu_trigger_event(pause_menu, MENU_EVENT_UPDATE, &event_data);
         menu_draw(pause_menu);
     }
 }
@@ -69,6 +93,7 @@ static int rando_seed_update(event_handler_t *handler, menu_event_t event, void 
     uint32_t value = (uint32_t)*event_data;
     menu_number_set(handler->subscriber, value);
     rando.seed[rando.current_file] = value;
+    rando.current_seed = value;
     return 1;
 }
 
@@ -113,13 +138,13 @@ void init(void){
     menu_init(main_menu, 20, 30);
 
     menu_label_add(main_menu, 0, 3, "Seed:");
-    rando.seed_num = menu_number_input_add(main_menu, 8, 3, 16, 8);
+    rando.seed_num = menu_number_input_add(main_menu, 8, 3, 10, 8);
     menu_item_register_event(rando.seed_num,  MENU_EVENT_NUMBER, rando_seed_update, NULL);
     menu_number_set(rando.seed_num, 0xDEADBEEF);
 
-    menu_label_add(main_menu, 0, 4, "Length:");
-    menu_item_t* short_button = menu_button_add(main_menu, 8, 4, "Short",rando_mode_set, RANDO_MODE_SHORT);
-    menu_item_register_event(short_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_SHORT);
+    //menu_label_add(main_menu, 0, 4, "Length:");
+    //menu_item_t* short_button = menu_button_add(main_menu, 8, 4, "Short",rando_mode_set, RANDO_MODE_SHORT);
+    //menu_item_register_event(short_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_SHORT);
 
     rando.cwd_name = (char *) malloc(40);
     //menu_label_add(main_menu, 0, 5,rando.cwd_name);
@@ -130,17 +155,20 @@ void init(void){
     chdir("bk_rando");
         
 
-    menu_item_t* normal_button = menu_button_add(main_menu, 14, 4, "Normal",rando_mode_set, RANDO_MODE_NORMAL);
-    normal_button->color = COLOR_GREEN;
-    menu_item_register_event(normal_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_NORMAL);
+    //menu_item_t* normal_button = menu_button_add(main_menu, 14, 4, "Normal",rando_mode_set, RANDO_MODE_NORMAL);
+    //normal_button->color = COLOR_GREEN;
+    //menu_item_register_event(normal_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_NORMAL);
 
-    menu_item_t* long_button = menu_button_add(main_menu, 21, 4, "Long",rando_mode_set, RANDO_MODE_LONG); 
-    menu_item_register_event(long_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_LONG);
+   // menu_item_t* long_button = menu_button_add(main_menu, 21, 4, "Long",rando_mode_set, RANDO_MODE_LONG); 
+    //menu_item_register_event(long_button, MENU_EVENT_UPDATE,rando_mode_update, RANDO_MODE_LONG);
 
     menu_ctx_init(pause_menu, NULL);
     menu_init(pause_menu, 20, 30);
     menu_label_add(pause_menu, 0, 0, "Seed:");
     menu_item_t* pause_seed_number = menu_number_input_add(pause_menu, 6, 0, 10, 6);
+    menu_item_register_event(pause_seed_number,  MENU_EVENT_NUMBER, rando_seed_update, NULL);
+    menu_number_set(rando.seed_num, 0xDEADBEEF);
+
     
 
     rando.menu_active = 0;

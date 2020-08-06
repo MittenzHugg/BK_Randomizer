@@ -232,4 +232,10 @@ bk_extern   uint32_t    bk_item_present_b_reset_hook;
 bk_extern   uint32_t    bk_item_present_r_reset_hook;
 
 bk_extern   uint32_t    bk_item_catepillar_reset_hook;
+
+bk_extern   uint32_t    bk_cutscene_map;
+
+bk_extern   uint32_t bk_main_map;
+bk_extern   uint32_t bk_main_exit;
+
 #endif
